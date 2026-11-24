@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="600" height="300" role="img" aria-label="OCR extraction flow">
+  <rect width="600" height="300" rx="18" fill="#f2f6fa"/>
+  <g fill="#ffffff" stroke="#c3d2e0" stroke-width="2">
+    <rect x="26" y="52" width="150" height="196" rx="12"/>
+    <rect x="412" y="52" width="162" height="196" rx="12"/>
+  </g>
+  <g fill="#e4ebf2">
+    <rect x="46" y="76" width="110" height="10" rx="5"/>
+    <rect x="46" y="98" width="86" height="8" rx="4"/>
+    <rect x="46" y="118" width="102" height="8" rx="4"/>
+    <rect x="46" y="138" width="70" height="8" rx="4"/>
+    <rect x="46" y="170" width="110" height="58" rx="8"/>
+  </g>
+  <g stroke="#17365D" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M196 150h64"/>
+    <path d="M250 140l10 10-10 10"/>
+  </g>
+  <g fill="#ffffff" stroke="#c3d2e0" stroke-width="2">
+    <rect x="272" y="36" width="118" height="228" rx="12"/>
+  </g>
+  <circle cx="331" cy="94" r="26" fill="none" stroke="#C9922E" stroke-width="4"/>
+  <path d="M347 110l14 14" stroke="#C9922E" stroke-width="4" stroke-linecap="round"/>
+  <g fill="#dfe7ee">
+    <rect x="290" y="142" width="82" height="8" rx="4"/>
+    <rect x="290" y="162" width="66" height="8" rx="4"/>
+    <rect x="290" y="182" width="82" height="8" rx="4"/>
+    <rect x="290" y="202" width="52" height="8" rx="4"/>
+  </g>
+  <g stroke="#17365D" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M402 150h20"/>
+    <path d="M414 140l10 10-10 10"/>
+  </g>
+  <g fill="#e8f3ec" stroke="#8fbf9f" stroke-width="2">
+    <rect x="432" y="76" width="122" height="26" rx="6"/>
+    <rect x="432" y="116" width="122" height="26" rx="6"/>
+    <rect x="432" y="156" width="122" height="26" rx="6"/>
+    <rect x="432" y="196" width="122" height="26" rx="6"/>
+  </g>
+  <g stroke="#4f8a63" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M444 89l4 4 7-7"/>
+    <path d="M444 129l4 4 7-7"/>
+    <path d="M444 169l4 4 7-7"/>
+    <path d="M444 209l4 4 7-7"/>
+  </g>
+</svg>

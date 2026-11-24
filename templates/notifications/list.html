@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Notifications — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="section-head" style="padding-top:34px;">
+  <div>
+    <span class="eyebrow">Activity feed</span>
+    <h1>Notifications</h1>
+    <p>{{ unread_count }} unread update{{ unread_count|pluralize }} across your workspace.</p>
+  </div>
+  {% if notifications %}
+  <form method="post" action="{% url 'notifications:mark_all_read' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-check' %}Mark all as read</button>
+  </form>
+  {% endif %}
+</div>
+
+{% if notifications %}
+<ul class="notification-list">
+  {% for note in notifications %}
+  <li class="notification-item {% if not note.read %}unread{% endif %}">
+    <span class="note-ico">{% include 'partials/icon.html' with name='icon-bell' %}</span>
+    <div class="note-body">
+      <p>{{ note.message }}</p>
+      <span>{{ note.created_at|date:"d M Y, H:i" }}{% if not note.read %} · unread{% endif %}</span>
+    </div>
+    {% if not note.read %}
+    <form method="post" action="{% url 'notifications:mark_read' note.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-ghost btn-sm">Mark read</button>
+    </form>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="card empty-state">
+  <div class="empty-icon">{% include 'partials/icon.html' with name='icon-bell' %}</div>
+  <h3>You're all caught up</h3>
+  <p>Uploads, OCR runs, validation results and duplicate flags will appear here.</p>
+  <a href="{% url 'documents:upload' %}" class="btn btn-primary">Upload a document</a>
+</div>
+{% endif %}
+{% endblock %}

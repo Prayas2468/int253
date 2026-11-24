@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Upload Document — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="section-head" style="padding-top:34px;">
+  <div>
+    <span class="eyebrow">New record</span>
+    <h1>Upload a land record</h1>
+    <p>PDF, PNG, JPG or TIFF up to 10 MB. OCR runs when you open the record.</p>
+  </div>
+  <a href="{% url 'documents:list' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-arrow-right' %}Back to documents</a>
+</div>
+
+<div class="grid grid-2" style="align-items:start;">
+  <form method="post" enctype="multipart/form-data" class="card" data-loading>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-error">{% include 'partials/icon.html' with name='icon-alert' %}<span>{{ form.non_field_errors|join:", " }}</span></div>
+    {% endif %}
+
+    <div class="dropzone" data-dropzone>
+      <span class="dz-icon">{% include 'partials/icon.html' with name='icon-upload' %}</span>
+      <strong>Drag &amp; drop your document here</strong>
+      <span>or click to browse — PDF, PNG, JPG, TIFF (max 10 MB)</span>
+      {{ form.file }}
+    </div>
+    {% if form.file.errors %}<div class="form-error">{{ form.file.errors|join:", " }}</div>{% endif %}
+
+    <div class="dz-preview" data-dz-preview>
+      <span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span>
+      <div class="dz-meta"><strong data-dz-name>Selected file</strong><span data-dz-size></span></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="form-grid">
+      <div class="form-field full">
+        <label for="{{ form.original_name.id_for_label }}">Document title</label>
+        {{ form.original_name }}
+        <span class="helptext">Leave blank to use the uploaded filename.</span>
+        {% if form.original_name.errors %}<div class="form-error">{{ form.original_name.errors|join:", " }}</div>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.survey_number.id_for_label }}">Survey / khasra number</label>
+        {{ form.survey_number }}
+        {% if form.survey_number.errors %}<div class="form-error">{{ form.survey_number.errors|join:", " }}</div>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.district.id_for_label }}">District</label>
+        {{ form.district }}
+        {% if form.district.errors %}<div class="form-error">{{ form.district.errors|join:", " }}</div>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.state.id_for_label }}">State</label>
+        {{ form.state }}
+        {% if form.state.errors %}<div class="form-error">{{ form.state.errors|join:", " }}</div>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.area.id_for_label }}">Area</label>
+        {{ form.area }}
+        {% if form.area.errors %}<div class="form-error">{{ form.area.errors|join:", " }}</div>{% endif %}
+      </div>
+      <div class="form-field full">
+        <label for="{{ form.owner_name.id_for_label }}">Owner / pattadar name</label>
+        {{ form.owner_name }}
+        {% if form.owner_name.errors %}<div class="form-error">{{ form.owner_name.errors|join:", " }}</div>{% endif %}
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <button type="submit" class="btn btn-primary btn-block">{% include 'partials/icon.html' with name='icon-upload' %}Upload document</button>
+    <p class="small muted" style="margin:12px 0 0;text-align:center;">Fields are optional — OCR fills anything left blank.</p>
+  </form>
+
+  <aside class="card">
+    <span class="eyebrow">Before you upload</span>
+    <h3>Get the best OCR result</h3>
+    <ul class="check-list">
+      <li>
+        <span class="check-mark">{% include 'partials/icon.html' with name='icon-check' %}</span>
+        <div><strong>Use a clear scan</strong><span>300 DPI or higher, straight and well lit.</span></div>
+      </li>
+      <li>
+        <span class="check-mark">{% include 'partials/icon.html' with name='icon-check' %}</span>
+        <div><strong>Keep the full page in frame</strong><span>Survey numbers and seals should be visible.</span></div>
+      </li>
+      <li>
+        <span class="check-mark">{% include 'partials/icon.html' with name='icon-check' %}</span>
+        <div><strong>One record per file</strong><span>Split multi-record bundles before uploading.</span></div>
+      </li>
+      <li>
+        <span class="check-mark">{% include 'partials/icon.html' with name='icon-shield' %}</span>
+        <div><strong>Files stay private</strong><span>Only your account can open uploaded records.</span></div>
+      </li>
+    </ul>
+    <div class="divider"></div>
+    <p class="small muted" style="margin:0;">After uploading, open the record and press <strong>Run OCR</strong>. Extracted fields, confidence scores and validation results appear automatically.</p>
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dashboard — BhoomiAI{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=20261124i">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-hero">
+  <div>
+    <span class="eyebrow">Government analytics portal</span>
+    <h1>Land records dashboard</h1>
+    <p>Live view of digitization, OCR quality and validation across states.</p>
+  </div>
+  <div class="dashboard-actions">
+    <span class="live-dot">Live data</span>
+    {% if selected_state %}
+    <a href="{% url 'dashboard:home' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-close' %}Clear {{ selected_state }}</a>
+    {% endif %}
+    <a href="{% url 'documents:upload' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-upload' %}Upload</a>
+    <a href="{% url 'reports:index' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-report' %}Reports</a>
+    <a href="{% url 'notifications:list' %}" class="btn btn-ghost btn-sm">
+      {% include 'partials/icon.html' with name='icon-bell' %}Alerts
+      {% if unread_notifications %}<span class="count-badge">{{ unread_notifications }}</span>{% endif %}
+    </a>
+  </div>
+</div>
+
+{% if available_states %}
+<div class="chip-row" style="margin:18px 0 4px;">
+  <a href="{% url 'dashboard:home' %}" class="chip {% if not selected_state %}is-active{% endif %}">All states</a>
+  {% for state in available_states %}
+  <a href="?state={{ state|urlencode }}" class="chip {% if selected_state == state %}is-active{% endif %}">{{ state }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="stats-grid">
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main">
+        <div class="stat-label">Total documents</div>
+        <div class="stat-value" id="live-total">{{ total_documents }}</div>
+      </div>
+      <span class="stat-thumb" aria-hidden="true">
+        <img src="{% static 'images/stat-documents.svg' %}" alt="" width="54" height="54">
+      </span>
+    </div>
+    <div class="stat-foot">
+      <span class="{% if trend_total >= 0 %}text-success{% else %}text-danger{% endif %}">
+        {% include 'partials/icon.html' with name='icon-trending' %} {{ trend_total }}%
+      </span> vs previous week
+    </div>
+    <div class="sparkline-wrap"><canvas class="sparkline" data-values="{{ spark_total|join:',' }}" aria-hidden="true"></canvas></div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main">
+        <div class="stat-label">Validated</div>
+        <div class="stat-value" id="live-validated">{{ validated_count }}</div>
+      </div>
+      <span class="stat-thumb success" aria-hidden="true">
+        <img src="{% static 'images/stat-validated.svg' %}" alt="" width="54" height="54">
+      </span>
+    </div>
+    <div class="stat-foot">
+      <span class="{% if trend_validated >= 0 %}text-success{% else %}text-danger{% endif %}">
+        {% include 'partials/icon.html' with name='icon-trending' %} {{ trend_validated }}%
+      </span> · {{ pass_rate }}% rules passed
+    </div>
+    <div class="sparkline-wrap"><canvas class="sparkline" data-values="{{ spark_done|join:',' }}" aria-hidden="true"></canvas></div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main">
+        <div class="stat-label">Pending review</div>
+        <div class="stat-value" id="live-pending">{{ pending_count }}</div>
+      </div>
+      <span class="stat-thumb gold" aria-hidden="true">
+        <img src="{% static 'images/stat-pending.svg' %}" alt="" width="54" height="54">
+      </span>
+    </div>
+    <div class="stat-foot">
+      <span class="{% if trend_pending <= 0 %}text-success{% else %}text-danger{% endif %}">
+        {% include 'partials/icon.html' with name='icon-trending' %} {{ trend_pending }}%
+      </span> · {{ failed_count }} failed OCR
+    </div>
+    <div class="sparkline-wrap"><canvas class="sparkline" data-values="{{ spark_pending|join:',' }}" aria-hidden="true"></canvas></div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main">
+        <div class="stat-label">Duplicate flags</div>
+        <div class="stat-value" id="live-duplicates">{{ duplicates_count }}</div>
+      </div>
+      <span class="stat-thumb accent" aria-hidden="true">
+        <img src="{% static 'images/stat-duplicates.svg' %}" alt="" width="54" height="54">
+      </span>
+    </div>
+    <div class="stat-foot">
+      <span class="{% if trend_duplicates <= 0 %}text-success{% else %}text-danger{% endif %}">
+        {% include 'partials/icon.html' with name='icon-trending' %} {{ trend_duplicates }}%
+      </span> · <a href="{% url 'duplicates:list' %}">Review queue</a>
+    </div>
+    <div class="sparkline-wrap"><canvas class="sparkline" data-values="{{ spark_duplicates|join:',' }}" aria-hidden="true"></canvas></div>
+  </article>
+</div>
+
+<div class="charts-grid">
+  <section class="chart-card">
+    <div class="chart-head">
+      <div>
+        <h4>India coverage map</h4>
+        <span>Esri grayscale basemap · state boundaries overlay · bubble size = documents · click a state to filter</span>
+      </div>
+      <span class="pill pill-neutral">{% include 'partials/icon.html' with name='icon-map-pin' %} {{ map_points|length }} states</span>
+    </div>
+    <div id="india-map" class="india-map" data-geojson-url="{% static 'data/india-states.geojson' %}" role="application" aria-label="Map of India showing document counts by state"></div>
+    <div id="india-map-fallback" class="india-map-fallback" hidden>
+      <img src="{% static 'images/india-map.svg' %}?v=20261124i" alt="Map of India showing state and union territory boundaries">
+      <p>Interactive map unavailable — showing the static state boundary map.</p>
+    </div>
+    <div class="map-legend"><span class="legend-dot"></span> State boundaries &amp; document volume · {{ map_points|length }} states reporting</div>
+  </section>
+
+  <section class="chart-card">
+    <div class="chart-head">
+      <div>
+        <h4>Processing pipeline</h4>
+        <span>Upload → OCR → Validate → Approve → Report</span>
+      </div>
+    </div>
+    <ol class="workflow">
+      {% for step in workflow %}
+      <li class="workflow-step">
+        <span class="workflow-icon">{% include 'partials/icon.html' with name=step.icon %}</span>
+        <div class="workflow-body">
+          <div class="workflow-label"><strong>{{ step.label }}</strong><span>{{ step.count }} / {{ total_documents }}</span></div>
+          <div class="workflow-bar"><span style="width: {{ step.percent }}%;"></span></div>
+        </div>
+        <span class="workflow-pct">{{ step.percent }}%</span>
+      </li>
+      {% endfor %}
+    </ol>
+    <div class="divider"></div>
+    <div class="meta-row">
+      <span class="meta-item">{% include 'partials/icon.html' with name='icon-check' %} {{ pass_rate }}% validation pass rate</span>
+      <span class="meta-item">{% include 'partials/icon.html' with name='icon-ocr' %} {{ validated_count }} OCR completed</span>
+    </div>
+  </section>
+</div>
+
+<div class="charts-grid">
+  <section class="chart-card wide">
+    <div class="chart-head">
+      <div><h4>Uploads — last 30 days</h4><span>Daily documents received</span></div>
+      <span class="pill pill-neutral">{{ total_documents }} total</span>
+    </div>
+    <div class="chart-body"><canvas id="uploadsLineChart"></canvas></div>
+  </section>
+</div>
+
+<div class="charts-grid">
+  <section class="chart-card">
+    <div class="chart-head"><div><h4>Status distribution</h4><span>Current pipeline state</span></div></div>
+    <div class="chart-body short"><canvas id="statusDoughnutChart"></canvas></div>
+  </section>
+  <section class="chart-card">
+    <div class="chart-head"><div><h4>Top 5 districts</h4><span>Documents by district</span></div></div>
+    <div class="chart-body short"><canvas id="districtBarChart"></canvas></div>
+  </section>
+</div>
+
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h3>Recent documents</h3>
+    <a href="{% url 'documents:list' %}">View all {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
+  </div>
+  {% if recent_documents %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>Document</th><th>Survey</th><th>District</th><th>Status</th><th>Confidence</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for doc in recent_documents %}
+        <tr>
+          <td>
+            <div class="doc-name">
+              <span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span>
+              <span>{{ doc.original_name|truncatechars:32 }}<small>{{ doc.uploaded_at|date:"d M Y, H:i" }}</small></span>
+            </div>
+          </td>
+          <td>{{ doc.survey_number|default:"—" }}</td>
+          <td>{{ doc.district|default:"—" }}</td>
+          <td><span class="pill pill-{{ doc.status }}">{{ doc.get_status_display }}</span></td>
+          <td>{{ doc.confidence|floatformat:1 }}%</td>
+          <td><a href="{% url 'documents:detail' doc.pk %}" class="btn btn-soft btn-sm">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">{% include 'partials/icon.html' with name='icon-document' %}</div>
+    <h3>No documents yet</h3>
+    <p>Upload your first land record to populate the dashboard, map and charts.</p>
+    <a href="{% url 'documents:upload' %}" class="btn btn-primary">Upload a document</a>
+  </div>
+  {% endif %}
+</section>
+
+{{ chart_data|json_script:"dashboard-data" }}
+{{ map_points|json_script:"map-data" }}
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{% static 'js/dashboard.js' %}?v=20261124i"></script>
+{% endblock %}

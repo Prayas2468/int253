@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Reports — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="section-head" style="padding-top:34px;">
+  <div>
+    <span class="eyebrow">Exports &amp; analytics</span>
+    <h1>Reports</h1>
+    <p>Download real records from your workspace as CSV, Excel or PDF.</p>
+  </div>
+  <a href="{% url 'dashboard:home' %}" class="btn btn-ghost btn-sm">Back to dashboard</a>
+</div>
+
+<div class="stats-grid">
+  <article class="stat-card">
+    <div class="stat-top">
+      <div><div class="stat-label">Documents</div><div class="stat-value">{{ total }}</div></div>
+      <span class="card-icon">{% include 'partials/icon.html' with name='icon-document' %}</span>
+    </div>
+    <div class="stat-foot">Included in exports</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div><div class="stat-label">Validated</div><div class="stat-value">{{ validated }}</div></div>
+      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-check' %}</span>
+    </div>
+    <div class="stat-foot">{{ pending }} pending · {{ failed_docs }} failed</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div><div class="stat-label">Rule pass rate</div><div class="stat-value">{{ pass_rate }}%</div></div>
+      <span class="card-icon gold">{% include 'partials/icon.html' with name='icon-validate' %}</span>
+    </div>
+    <div class="stat-foot">Across validation checks</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div><div class="stat-label">Avg confidence</div><div class="stat-value">{{ avg_confidence }}%</div></div>
+      <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-ocr' %}</span>
+    </div>
+    <div class="stat-foot">OCR field quality</div>
+  </article>
+</div>
+
+<div class="report-grid" style="margin-bottom:30px;">
+  <article class="card card-hover report-card">
+    <span class="card-icon">{% include 'partials/icon.html' with name='icon-csv' %}</span>
+    <h3>CSV export</h3>
+    <p>Raw tabular data for spreadsheets and data pipelines.</p>
+    <div class="report-meta"><span class="pill">UTF-8</span><span class="pill">All fields</span></div>
+    <a href="{% url 'reports:csv' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}Download CSV</a>
+  </article>
+
+  <article class="card card-hover report-card">
+    <span class="card-icon success">{% include 'partials/icon.html' with name='icon-excel' %}</span>
+    <h3>Excel workbook</h3>
+    <p>Formatted .xlsx with frozen headers and column widths.</p>
+    <div class="report-meta"><span class="pill">XLSX</span><span class="pill">Styled</span></div>
+    {% if excel_available %}
+    <a href="{% url 'reports:excel' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}Download Excel</a>
+    {% else %}
+    <span class="pill pill-pending">openpyxl not installed</span>
+    {% endif %}
+  </article>
+
+  <article class="card card-hover report-card">
+    <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-pdf' %}</span>
+    <h3>PDF report</h3>
+    <p>Print-ready landscape report with your records table.</p>
+    <div class="report-meta"><span class="pill">PDF</span><span class="pill">Landscape</span></div>
+    {% if pdf_available %}
+    <a href="{% url 'reports:pdf' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}Download PDF</a>
+    {% else %}
+    <span class="pill pill-pending">reportlab not installed</span>
+    {% endif %}
+  </article>
+</div>
+
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h3>Export preview</h3>
+    <span class="pill pill-neutral">{{ total }} record{{ total|pluralize }}</span>
+  </div>
+  {% if recent_documents %}
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>ID</th><th>File</th><th>Survey</th><th>District</th><th>Status</th><th>Confidence</th><th>Uploaded</th></tr>
+      </thead>
+      <tbody>
+        {% for doc in recent_documents %}
+        <tr>
+          <td>#{{ doc.pk }}</td>
+          <td>{{ doc.original_name|truncatechars:32 }}</td>
+          <td>{{ doc.survey_number|default:"—" }}</td>
+          <td>{{ doc.district|default:"—" }}</td>
+          <td><span class="pill pill-{{ doc.status }}">{{ doc.get_status_display }}</span></td>
+          <td>{{ doc.confidence|floatformat:1 }}%</td>
+          <td class="nowrap">{{ doc.uploaded_at|date:"d M Y" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">{% include 'partials/icon.html' with name='icon-report' %}</div>
+    <h3>Nothing to export yet</h3>
+    <p>Upload and validate a document to populate your reports.</p>
+    <a href="{% url 'documents:upload' %}" class="btn btn-primary">Upload a document</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

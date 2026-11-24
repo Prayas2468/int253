@@ -1,0 +1,12 @@
+django>=4.2,<7.0
+djangorestframework>=3.14
+pillow
+pytesseract
+opencv-python
+pymupdf
+pandas
+openpyxl
+reportlab
+pytest
+pytest-django
+python-dotenv

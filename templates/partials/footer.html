@@ -1,0 +1,44 @@
+{% load static %}
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <img class="brand-logo" src="{% static 'images/logo-light.svg' %}" alt="BhoomiAI" width="173" height="36">
+            <p>Intelligent land record digitization, OCR extraction, validation and analytics for modern land administration.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <ul>
+                <li><a href="{% url 'dashboard:home' %}">Dashboard</a></li>
+                <li><a href="{% url 'documents:list' %}">Documents</a></li>
+                <li><a href="{% url 'validation:list' %}">Validation</a></li>
+                <li><a href="{% url 'duplicates:list' %}">Duplicates</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Insights</h4>
+            <ul>
+                <li><a href="{% url 'reports:index' %}">Reports</a></li>
+                <li><a href="{% url 'reports:csv' %}">CSV export</a></li>
+                <li><a href="{% url 'reports:excel' %}">Excel export</a></li>
+                <li><a href="{% url 'reports:pdf' %}">PDF export</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Account</h4>
+            <ul>
+                <li><a href="{% url 'core:home' %}#how-it-works">How it works</a></li>
+                <li><a href="{% url 'notifications:list' %}">Notifications</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
+                {% else %}
+                <li><a href="{% url 'accounts:login' %}">Sign in</a></li>
+                <li><a href="{% url 'accounts:signup' %}">Create account</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>&copy; 2026 BhoomiAI. All rights reserved.</span>
+        <span>Built for secure, auditable land record digitization.</span>
+    </div>
+</footer>

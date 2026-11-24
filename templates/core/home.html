@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}BhoomiAI — Transforming Land Records into Digital Assets{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-text reveal">
+      <span class="eyebrow">Land record intelligence</span>
+      <h1>Transforming Land Records into <span class="highlight">Intelligent</span> Digital Assets.</h1>
+      <p class="hero-lead">
+        Digitize, extract, validate, and manage land records with AI-powered document
+        processing. Fast, accurate, and secure.
+      </p>
+      <div class="hero-actions">
+        <a href="{% url 'documents:upload' %}" class="btn btn-primary">
+          {% include 'partials/icon.html' with name='icon-upload' %}Upload Land Record
+        </a>
+        <a href="#samples" class="btn btn-ghost">
+          {% include 'partials/icon.html' with name='icon-layers' %}Explore Sample Records
+        </a>
+      </div>
+      <div class="hero-metrics">
+        <div class="hero-metric">
+          <strong>{{ total_documents|default:0 }}+</strong>
+          <span>Records digitized</span>
+        </div>
+        <div class="hero-metric">
+          <strong>{{ districts_covered|default:0 }}</strong>
+          <span>Districts covered</span>
+        </div>
+        <div class="hero-metric">
+          <strong>99.2%</strong>
+          <span>Extraction accuracy</span>
+        </div>
+        <div class="hero-metric">
+          <strong>5</strong>
+          <span>Validation checks</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal">
+      <figure class="hero-photo">
+        <img src="{% static 'images/land-map.jpg' %}" alt="Aerial view of cultivated land parcels">
+      </figure>
+      <div class="float-card fc-top">
+        <span class="fc-icon">{% include 'partials/icon.html' with name='icon-ocr' %}</span>
+        <div><strong>OCR Confidence</strong><span>98.4% · Survey 142/2</span></div>
+      </div>
+      <div class="float-card fc-right">
+        <span class="fc-icon">{% include 'partials/icon.html' with name='icon-check' %}</span>
+        <div><strong>Status: Verified</strong><span>5 / 5 rules passed</span></div>
+      </div>
+      <div class="float-card fc-bottom">
+        <span class="fc-icon">{% include 'partials/icon.html' with name='icon-shield' %}</span>
+        <div><strong>Secure Storage</strong><span>Encrypted · Audited</span></div>
+      </div>
+
+      <div class="hero-map-card" aria-hidden="true">
+        <img src="{% static 'images/india-map.svg' %}?v=20261124i" alt="" width="620" height="700">
+        <div class="hm-meta">
+          <strong>{{ districts_covered|default:0 }} districts</strong>
+          <span class="hm-live">Live</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how-it-works">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Workflow</span>
+      <h2>From scanned paper to verified data in four steps</h2>
+      <p>Every document moves through the same auditable pipeline.</p>
+    </div>
+    <a href="{% url 'documents:upload' %}" class="btn btn-soft btn-sm">Start a record {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
+  </div>
+
+  <div class="section-banner">
+    <div class="section-banner-media">
+      <img src="{% static 'images/ai-scan.jpg' %}" alt="Land record documents being scanned and digitized by AI OCR" width="900" height="620">
+      <span class="photo-chip">AI OCR · field-level confidence</span>
+    </div>
+    <div class="section-banner-copy">
+      <span class="eyebrow">Inside the pipeline</span>
+      <h3>Scanned paper becomes structured, searchable data</h3>
+      <p>Every upload is scanned, read and checked automatically — so your team spends time reviewing exceptions, not retyping fields.</p>
+      <ul class="section-banner-list">
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Survey, area, district and owner fields extracted with confidence scores</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Low-confidence fields queued for a human reviewer</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Output ready for CSV, Excel and PDF reporting</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="steps">
+    <article class="card card-hover step-card">
+      <span class="step-num">01</span>
+      <span class="card-icon">{% include 'partials/icon.html' with name='icon-upload' %}</span>
+      <h3>Upload Document</h3>
+      <p>Drag in a PDF or scan of a Record of Rights, khasra or plot document.</p>
+    </article>
+    <article class="card card-hover step-card">
+      <span class="step-num">02</span>
+      <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-ocr' %}</span>
+      <h3>AI OCR</h3>
+      <p>Tesseract reads the page and extracts survey, area, district and owner fields.</p>
+    </article>
+    <article class="card card-hover step-card">
+      <span class="step-num">03</span>
+      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-validate' %}</span>
+      <h3>Validate Data</h3>
+      <p>Rule-based checks flag missing fields, low confidence and inconsistent values.</p>
+    </article>
+    <article class="card card-hover step-card">
+      <span class="step-num">04</span>
+      <span class="card-icon gold">{% include 'partials/icon.html' with name='icon-report' %}</span>
+      <h3>Export Report</h3>
+      <p>Download verified records as CSV, Excel or a print-ready PDF report.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="capabilities">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Capabilities</span>
+      <h2>Everything a land records team needs</h2>
+      <p>Purpose-built for revenue departments, registries and land banks.</p>
+    </div>
+  </div>
+
+  <div class="section-banner reverse">
+    <div class="section-banner-media">
+      <img src="{% static 'images/land-map.jpg' %}" alt="Surveyed farmland parcels seen from above with visible plot boundaries" width="900" height="620">
+      <span class="photo-chip">Parcel boundaries · state coverage</span>
+    </div>
+    <div class="section-banner-copy">
+      <span class="eyebrow">Maps &amp; validation</span>
+      <h3>Plot boundaries and record rules, checked together</h3>
+      <p>State maps, parcel geometry and document rules combine into one review surface — with every result traceable to its source page.</p>
+      <ul class="section-banner-list">
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> India state boundaries and document volume in one view</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Five configurable validation rules with pass/fail detail</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Duplicate similarity checks across survey, owner and area</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid grid-3">
+    <article class="card card-hover cap-card">
+      <span class="card-icon">{% include 'partials/icon.html' with name='icon-ocr' %}</span>
+      <div><h3>OCR Extraction</h3><p>Convert scanned pages and PDFs into structured fields with confidence scores.</p></div>
+    </article>
+    <article class="card card-hover cap-card">
+      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-validate' %}</span>
+      <div><h3>Validation Engine</h3><p>Five configurable rules check completeness, numeric area and OCR quality.</p></div>
+    </article>
+    <article class="card card-hover cap-card">
+      <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-duplicate' %}</span>
+      <div><h3>Duplicate Detection</h3><p>Similarity scoring surfaces records that share survey, owner or area.</p></div>
+    </article>
+    <article class="card card-hover cap-card">
+      <span class="card-icon gold">{% include 'partials/icon.html' with name='icon-map' %}</span>
+      <div><h3>Land Mapping</h3><p>State-level analytics on an interactive India map with live document counts.</p></div>
+    </article>
+    <article class="card card-hover cap-card">
+      <span class="card-icon">{% include 'partials/icon.html' with name='icon-report' %}</span>
+      <div><h3>Reports &amp; Exports</h3><p>Generate CSV, Excel and PDF reports directly from verified records.</p></div>
+    </article>
+    <article class="card card-hover cap-card">
+      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-shield' %}</span>
+      <div><h3>Secure Storage</h3><p>Role-aware access, CSRF-protected forms and an auditable notification trail.</p></div>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="samples">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">Sample records</span>
+      <h2>Recently verified land records</h2>
+      <p>A live preview of records processed by the platform.</p>
+    </div>
+    <a href="{% url 'documents:list' %}" class="btn btn-ghost btn-sm">View all documents {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
+  </div>
+
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Document</th>
+          <th>Survey No</th>
+          <th>District</th>
+          <th>State</th>
+          <th>Status</th>
+          <th>Confidence</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in sample_records %}
+        <tr>
+          <td>
+            <div class="doc-name">
+              <span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span>
+              <span>{{ record.original_name|truncatechars:34 }}<small>ID #{{ record.pk }}</small></span>
+            </div>
+          </td>
+          <td>{{ record.survey_number|default:"—" }}</td>
+          <td>{{ record.district|default:"—" }}</td>
+          <td>{{ record.state|default:"—" }}</td>
+          <td><span class="pill pill-{{ record.status }}">{{ record.get_status_display }}</span></td>
+          <td>{{ record.confidence|floatformat:1 }}%</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td><div class="doc-name"><span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span><span>Pune Survey 142/2<small>Demo record</small></span></div></td>
+          <td>142/2</td><td>Pune</td><td>Maharashtra</td>
+          <td><span class="pill pill-done">Done</span></td><td>94.5%</td>
+        </tr>
+        <tr>
+          <td><div class="doc-name"><span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span><span>Lucknow Survey 210/7<small>Demo record</small></span></div></td>
+          <td>210/7</td><td>Lucknow</td><td>Uttar Pradesh</td>
+          <td><span class="pill pill-done">Done</span></td><td>89.7%</td>
+        </tr>
+        <tr>
+          <td><div class="doc-name"><span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span><span>Jaipur Survey 301/4<small>Demo record</small></span></div></td>
+          <td>301/4</td><td>Jaipur</td><td>Rajasthan</td>
+          <td><span class="pill pill-done">Done</span></td><td>87.9%</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="cta-banner">
+    <span class="eyebrow" style="color:#F0C15C;justify-content:center;">Ready when you are</span>
+    <h2>Ready to digitize your first record?</h2>
+    <p>Upload a scan, run OCR and get a validated record in minutes — not weeks.</p>
+    <div class="hero-actions">
+      <a href="{% url 'accounts:signup' %}" class="btn btn-accent">Create free account {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
+      <a href="{% url 'documents:upload' %}" class="btn btn-ghost">Upload a record</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

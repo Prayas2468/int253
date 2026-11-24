@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Duplicates — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="section-head" style="padding-top:34px;">
+  <div>
+    <span class="eyebrow">Integrity checks</span>
+    <h1>Duplicate candidates</h1>
+    <p>Side-by-side comparison of records sharing survey, owner, area or district.</p>
+  </div>
+  <form method="post" action="{% url 'duplicates:scan' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-refresh' %}Scan for duplicates</button>
+  </form>
+</div>
+
+<div class="stats-grid" style="grid-template-columns:repeat(3,minmax(0,1fr));">
+  <article class="stat-card">
+    <div class="stat-top">
+      <div><div class="stat-label">Pending review</div><div class="stat-value">{{ pending_count }}</div></div>
+      <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-duplicate' %}</span>
+    </div>
+    <div class="stat-foot">Unreviewed duplicate flags</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div><div class="stat-label">Total candidates</div><div class="stat-value">{{ total_count }}</div></div>
+      <span class="card-icon">{% include 'partials/icon.html' with name='icon-layers' %}</span>
+    </div>
+    <div class="stat-foot">Across all documents</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div><div class="stat-label">Reviewed</div><div class="stat-value">{{ reviewed_count }}</div></div>
+      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-check' %}</span>
+    </div>
+    <div class="stat-foot">Already actioned by your team</div>
+  </article>
+</div>
+
+{% if candidates %}
+<div class="grid" style="gap:18px;">
+  {% for candidate in candidates %}
+  <section class="card">
+    <div class="chart-head">
+      <div>
+        <h4>Similarity {{ candidate.similarity|floatformat:0 }}%</h4>
+        <span>Flagged {{ candidate.created_at|date:"d M Y, H:i" }}</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span class="pill {% if candidate.reviewed %}pill-done{% else %}pill-pending{% endif %}">{% if candidate.reviewed %}Reviewed{% else %}Needs review{% endif %}</span>
+        <form method="post" action="{% url 'duplicates:review' candidate.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-soft btn-sm">{% if candidate.reviewed %}Reopen{% else %}Mark reviewed{% endif %}</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>{{ candidate.document.original_name|truncatechars:30 }}</h4>
+        <span class="muted">Primary record</span>
+        <dl>
+          <dt>Survey</dt><dd>{{ candidate.document.survey_number|default:"—" }}</dd>
+          <dt>District</dt><dd>{{ candidate.document.district|default:"—" }}</dd>
+          <dt>State</dt><dd>{{ candidate.document.state|default:"—" }}</dd>
+          <dt>Area</dt><dd>{{ candidate.document.area|default:"—" }}</dd>
+          <dt>Owner</dt><dd>{{ candidate.document.owner_name|default:"—" }}</dd>
+        </dl>
+        <a href="{% url 'documents:detail' candidate.document.pk %}" class="btn btn-ghost btn-sm" style="margin-top:12px;">Open record</a>
+      </div>
+      <span class="compare-vs">VS</span>
+      <div class="compare-card">
+        <h4>{{ candidate.matched_document.original_name|truncatechars:30 }}</h4>
+        <span class="muted">Matched record</span>
+        <dl>
+          <dt>Survey</dt><dd>{{ candidate.matched_document.survey_number|default:"—" }}</dd>
+          <dt>District</dt><dd>{{ candidate.matched_document.district|default:"—" }}</dd>
+          <dt>State</dt><dd>{{ candidate.matched_document.state|default:"—" }}</dd>
+          <dt>Area</dt><dd>{{ candidate.matched_document.area|default:"—" }}</dd>
+          <dt>Owner</dt><dd>{{ candidate.matched_document.owner_name|default:"—" }}</dd>
+        </dl>
+        <a href="{% url 'documents:detail' candidate.matched_document.pk %}" class="btn btn-ghost btn-sm" style="margin-top:12px;">Open record</a>
+      </div>
+    </div>
+    <div class="similarity-meter" style="margin-top:16px;"><span style="width: {{ candidate.similarity|floatformat:0 }}%;"></span></div>
+  </section>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card empty-state">
+  <div class="empty-icon">{% include 'partials/icon.html' with name='icon-duplicate' %}</div>
+  <h3>No duplicate candidates</h3>
+  <p>Run a scan after uploading records that may share survey numbers or owners.</p>
+  <form method="post" action="{% url 'duplicates:scan' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">{% include 'partials/icon.html' with name='icon-refresh' %}Scan now</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

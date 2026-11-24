@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Fields and parcels">
+  <defs>
+    <linearGradient id="hfSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a8cdea"/>
+      <stop offset="1" stop-color="#eef5fa"/>
+    </linearGradient>
+    <linearGradient id="hfGreen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#84b268"/>
+      <stop offset="1" stop-color="#5c8c45"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="16" fill="url(#hfSky)"/>
+  <circle cx="320" cy="62" r="28" fill="#f6d27a"/>
+  <path d="M0 150 L70 118 L140 146 L220 108 L300 148 L400 118 L400 300 L0 300 Z" fill="#94b1c5" opacity="0.6"/>
+  <path d="M0 178 L90 148 L180 176 L280 146 L400 174 L400 300 L0 300 Z" fill="url(#hfGreen)"/>
+  <path d="M0 222 L110 196 L220 226 L330 198 L400 216 L400 300 L0 300 Z" fill="#c6b26b"/>
+  <g stroke="#f7f4e6" stroke-width="2.5" opacity="0.7" fill="none">
+    <path d="M40 300 L150 186"/>
+    <path d="M150 300 L210 196"/>
+    <path d="M280 300 L268 208"/>
+    <path d="M370 300 L330 214"/>
+  </g>
+  <g stroke="#3f6b33" stroke-width="1.6" opacity="0.5" fill="none">
+    <path d="M0 252 L100 234 L210 258 L320 236 L400 250"/>
+    <path d="M0 278 L120 262 L250 282 L380 264"/>
+  </g>
+  <g stroke="#17365D" stroke-width="2" fill="none" opacity="0.85">
+    <path d="M22 22h16M22 22v16M378 22h-16M378 22v16"/>
+  </g>
+</svg>

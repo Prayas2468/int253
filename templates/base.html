@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BhoomiAI — intelligent land record digitization, OCR validation and predictive analytics.">
+  <title>{% block title %}BhoomiAI — Intelligent Land Records{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('bhoomiai-theme');
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}?v=20261124i">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}?v=20261124i">
+  {% block extra_head %}{% endblock %}
+</head>
+<body {% if user.is_authenticated %}data-live-url="{% url 'core:live' %}"{% endif %}>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="bg-wallpaper" aria-hidden="true"
+       style="--wallpaper-light:url('{% static 'images/wallpaper-light.svg' %}'); --wallpaper-dark:url('{% static 'images/wallpaper-dark.svg' %}');"></div>
+  <div class="bg-mesh" aria-hidden="true"></div>
+
+  {% include 'partials/header.html' %}
+
+  <main id="main" class="container">
+    {% include 'partials/messages.html' %}
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include 'partials/footer.html' %}
+
+  <script src="{% static 'js/theme.js' %}?v=20261124i"></script>
+  <script src="{% static 'js/app.js' %}?v=20261124i"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  {% block scripts %}{% endblock %}
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

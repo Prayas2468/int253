@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Validation — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="section-head" style="padding-top:34px;">
+  <div>
+    <span class="eyebrow">Quality control</span>
+    <h1>Validation results</h1>
+    <p>Rule-based checks across extracted survey, district, area and owner fields.</p>
+  </div>
+  <form method="post" action="{% url 'validation:run_all' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-refresh' %}Re-run all checks</button>
+  </form>
+</div>
+
+<div class="stats-grid" style="grid-template-columns:repeat(3,minmax(0,1fr));">
+  <article class="stat-card">
+    <div class="stat-top">
+      <div><div class="stat-label">Overall pass rate</div><div class="stat-value">{{ overall_percent }}%</div></div>
+      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-check' %}</span>
+    </div>
+    <div class="stat-foot">Across all validation checks</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div><div class="stat-label">Checks passed</div><div class="stat-value">{{ totals.passed }}</div></div>
+      <span class="card-icon">{% include 'partials/icon.html' with name='icon-validate' %}</span>
+    </div>
+    <div class="stat-foot">of {{ totals.checks }} total checks</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div><div class="stat-label">Checks failed</div><div class="stat-value">{{ totals.failed }}</div></div>
+      <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-alert' %}</span>
+    </div>
+    <div class="stat-foot">Needs review or a clearer scan</div>
+  </article>
+</div>
+
+{% if documents %}
+<div class="grid" style="gap:18px;">
+  {% for entry in documents %}
+  <section class="card">
+    <div class="chart-head">
+      <div>
+        <h4><a href="{% url 'documents:detail' entry.document.pk %}">{{ entry.document.original_name|truncatechars:52 }}</a></h4>
+        <span>{{ entry.document.district|default:"No district" }}{% if entry.document.state %} · {{ entry.document.state }}{% endif %} · {{ entry.document.uploaded_at|date:"d M Y" }}</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span class="pill pill-{{ entry.document.status }}">{{ entry.document.get_status_display }}</span>
+        <span class="pill {% if entry.summary.percent >= 80 %}pill-done{% elif entry.summary.percent >= 50 %}pill-pending{% else %}pill-failed{% endif %}">{{ entry.summary.passed }}/{{ entry.summary.total }} passed</span>
+        <form method="post" action="{% url 'validation:run' entry.document.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-ghost btn-sm">Re-run</button>
+        </form>
+      </div>
+    </div>
+    <div class="timeline">
+      {% for result in entry.results %}
+      <div class="timeline-item {% if not result.passed %}is-fail{% endif %}">
+        <strong>{{ result.rule.name }}</strong>
+        <span>{{ result.message|default:result.rule.description }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card empty-state">
+  <div class="empty-icon">{% include 'partials/icon.html' with name='icon-validate' %}</div>
+  <h3>No validation results yet</h3>
+  <p>Upload a document and run OCR. Validation checks are generated automatically.</p>
+  <a href="{% url 'documents:upload' %}" class="btn btn-primary">Upload a document</a>
+</div>
+{% endif %}
+{% endblock %}

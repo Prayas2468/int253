@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Server error — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="card empty-state" style="margin-top:48px;">
+  <div class="empty-icon">{% include 'partials/icon.html' with name='icon-alert' %}</div>
+  <h1 style="font-size:clamp(2rem,6vw,3.2rem);">500</h1>
+  <h3>Something went wrong</h3>
+  <p>We hit an unexpected error while processing your request. Your data has not been changed.</p>
+  <div class="dashboard-actions" style="justify-content:center;">
+    <a href="{% url 'core:home' %}" class="btn btn-primary">{% include 'partials/icon.html' with name='icon-home' %}Return home</a>
+    <a href="{% url 'dashboard:home' %}" class="btn btn-ghost">{% include 'partials/icon.html' with name='icon-dashboard' %}Go to dashboard</a>
+  </div>
+</div>
+{% endblock %}

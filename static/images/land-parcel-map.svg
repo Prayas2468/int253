@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 360" width="520" height="360" role="img" aria-label="Land parcel map with surveyed plot boundaries">
+  <defs>
+    <linearGradient id="lpSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EEF6EF"/><stop offset="1" stop-color="#E4F0E8"/>
+    </linearGradient>
+    <linearGradient id="lpGreen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#A9DBBC"/><stop offset="1" stop-color="#72B78C"/>
+    </linearGradient>
+    <linearGradient id="lpGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F0DCA8"/><stop offset="1" stop-color="#D8BD77"/>
+    </linearGradient>
+    <linearGradient id="lpBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4A8BDB"/><stop offset="1" stop-color="#2457A6"/>
+    </linearGradient>
+    <filter id="lpShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#17365D" flood-opacity="0.15"/>
+    </filter>
+    <pattern id="lpHatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+      <line x1="0" y1="0" x2="0" y2="10" stroke="#FFFFFF" stroke-width="2" opacity="0.35"/>
+    </pattern>
+  </defs>
+
+  <rect width="520" height="360" rx="24" fill="url(#lpSky)"/>
+
+  <!-- base map -->
+  <g filter="url(#lpShadow)">
+    <path d="M40 42h430a10 10 0 0 1 10 10v250a10 10 0 0 1-10 10H40a10 10 0 0 1-10-10V52a10 10 0 0 1 10-10z" fill="#F8FBF7" stroke="#CFE4D6" stroke-width="2"/>
+  </g>
+
+  <!-- parcels -->
+  <g stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round">
+    <path d="M42 68h150l14 74H54z" fill="url(#lpGreen)"/>
+    <path d="M206 68h128l-8 74H192z" fill="url(#lpGold)"/>
+    <path d="M342 68h124v74H334z" fill="#BFDCCB"/>
+    <path d="M42 154h176l10 92H42z" fill="url(#lpGold)"/>
+    <path d="M232 154h94l16 92H222z" fill="url(#lpGreen)"/>
+    <path d="M342 154h124v92H326z" fill="#DDEBD9"/>
+    <path d="M42 258h186l-6 50H42z" fill="#DCEAD9"/>
+    <path d="M242 258h224v50H234z" fill="url(#lpGold)"/>
+  </g>
+
+  <!-- parcel hatch + field rows -->
+  <path d="M42 68h150l14 74H54z" fill="url(#lpHatch)"/>
+  <path d="M232 154h94l16 92H222z" fill="url(#lpHatch)"/>
+  <g stroke="#8DAF97" stroke-width="1.4" opacity="0.55" fill="none">
+    <path d="M66 84h110M72 100h106M78 116h104"/>
+    <path d="M360 76v60M378 74v62M396 74v62"/>
+    <path d="M360 170v62M386 168v64M412 168v64"/>
+    <path d="M256 272h196M258 290h194"/>
+  </g>
+
+  <!-- selected parcel -->
+  <path d="M232 154h94l16 92H222z" fill="#E94B5A" opacity="0.13"/>
+  <path d="M232 154h94l16 92H222z" fill="none" stroke="#E94B5A" stroke-width="3" stroke-dasharray="7 6"/>
+
+  <!-- survey pegs -->
+  <g fill="#FFFFFF" stroke="#2457A6" stroke-width="2">
+    <circle cx="222" cy="246" r="4.5"/><circle cx="326" cy="246" r="4.5"/>
+    <circle cx="232" cy="154" r="4.5"/><circle cx="326" cy="154" r="4.5"/>
+  </g>
+
+  <!-- roads -->
+  <g stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" opacity="0.9">
+    <path d="M186 62v246"/><path d="M40 246h444"/>
+  </g>
+  <g stroke="#D6E3DA" stroke-width="1.4" stroke-dasharray="8 8">
+    <path d="M186 62v246"/><path d="M40 246h444"/>
+  </g>
+
+  <!-- ordnance marker -->
+  <g transform="translate(246 168)">
+    <path d="M20 0c11 0 20 9 20 20 0 15-20 42-20 42S0 35 0 20C0 9 9 0 20 0z" fill="url(#lpBlue)" filter="url(#lpShadow)"/>
+    <circle cx="20" cy="20" r="8" fill="#FFFFFF"/>
+    <path d="M16 20l3 3 6-6" fill="none" stroke="#2457A6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- measurement chip -->
+  <g transform="translate(56 268)">
+    <rect width="144" height="42" rx="11" fill="#FFFFFF" stroke="#D6E4DA" stroke-width="1.5"/>
+    <rect x="12" y="11" width="20" height="20" rx="6" fill="#E8F1FB"/>
+    <path d="M17 21l4-5 4 3 3-2" fill="none" stroke="#2457A6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="42" y="19" font-family="Inter, Segoe UI, sans-serif" font-size="9" font-weight="700" fill="#17365D">SURVEY 142/2</text>
+    <text x="42" y="32" font-family="Inter, Segoe UI, sans-serif" font-size="8" fill="#5B6B80">1.24 ha · boundary matched</text>
+  </g>
+
+  <!-- compass -->
+  <g transform="translate(438 60)">
+    <circle cx="20" cy="20" r="20" fill="#FFFFFF" stroke="#D6E4DA" stroke-width="1.5"/>
+    <path d="M20 7l5 13-5 13-5-13z" fill="#2457A6"/>
+    <path d="M20 20l5 13-5-13z" fill="#E94B5A"/>
+    <text x="20" y="5" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" font-weight="700" fill="#5B6B80">N</text>
+  </g>
+
+  <!-- state badges -->
+  <g transform="translate(296 300)">
+    <rect width="110" height="28" rx="14" fill="#17365D"/>
+    <circle cx="15" cy="14" r="4" fill="#8FD6B4"/>
+    <text x="26" y="18" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#FFFFFF">STATE VERIFIED</text>
+  </g>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Upload a land record">
+  <rect width="400" height="300" rx="16" fill="#eef4f9"/>
+  <circle cx="200" cy="150" r="104" fill="#dfeaf3"/>
+  <path d="M128 214h144a30 30 0 0 0 4-60 48 48 0 0 0-92-14 34 34 0 0 0-56 34z" fill="#ffffff" stroke="#9db6c9" stroke-width="3" stroke-linejoin="round"/>
+  <g stroke="#17365D" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M200 196v-62"/>
+    <path d="M176 156l24-24 24 24"/>
+  </g>
+  <g fill="#C9922E">
+    <circle cx="132" cy="120" r="4"/>
+    <circle cx="272" cy="112" r="5"/>
+    <circle cx="286" cy="188" r="3"/>
+    <circle cx="118" cy="188" r="3"/>
+  </g>
+  <rect x="148" y="228" width="104" height="10" rx="5" fill="#b7c9d7"/>
+  <rect x="168" y="248" width="64" height="8" rx="4" fill="#cbd8e3"/>
+</svg>

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Edit profile — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="section-head" style="padding-top:34px;">
+  <div>
+    <span class="eyebrow">Account settings</span>
+    <h1>Edit profile</h1>
+    <p>Update your display name and default workspace theme.</p>
+  </div>
+  <a href="{% url 'accounts:profile' %}" class="btn btn-ghost btn-sm">Back to profile</a>
+</div>
+
+<div class="grid grid-2" style="align-items:start;">
+  <form method="post" class="card" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-error">{% include 'partials/icon.html' with name='icon-alert' %}<span>{{ form.non_field_errors|join:", " }}</span></div>
+    {% endif %}
+
+    <div class="form-field">
+      <label for="{{ form.full_name.id_for_label }}">Full name</label>
+      {{ form.full_name }}
+      {% if form.full_name.errors %}<span class="form-error">{{ form.full_name.errors|join:", " }}</span>{% endif %}
+      <span class="helptext">Shown on your profile and avatar initials.</span>
+    </div>
+
+    <div class="form-field">
+      <label for="{{ form.theme_preference.id_for_label }}">Theme preference</label>
+      {{ form.theme_preference }}
+      {% if form.theme_preference.errors %}<span class="form-error">{{ form.theme_preference.errors|join:", " }}</span>{% endif %}
+      <span class="helptext">The header toggle always overrides this for the current device.</span>
+    </div>
+
+    <div class="divider"></div>
+    <div class="dashboard-actions">
+      <button type="submit" class="btn btn-primary">{% include 'partials/icon.html' with name='icon-check' %}Save changes</button>
+      <a href="{% url 'accounts:profile' %}" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+
+  <aside class="card">
+    <span class="eyebrow">Account</span>
+    <div class="profile-card" style="padding:0;text-align:left;">
+      <div class="profile-avatar" style="margin:6px 0 16px;">
+        {% if user.full_name %}{{ user.full_name|slice:':1'|upper }}{% else %}{% include 'partials/icon.html' with name='icon-user' %}{% endif %}
+      </div>
+      <h2>{{ user.full_name|default:user.get_username }}</h2>
+      <p>{{ user.email }}</p>
+      <span class="pill pill-neutral">{{ user.get_role_display }}</span>
+    </div>
+    <div class="divider"></div>
+    <p class="small muted" style="margin:0;">Email addresses are managed by an administrator. Contact your workspace owner to change your sign-in email.</p>
+  </aside>
+</div>
+{% endblock %}

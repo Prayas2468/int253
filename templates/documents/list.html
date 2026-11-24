@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Documents — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="section-head" style="padding-top:34px;">
+  <div>
+    <span class="eyebrow">Document vault</span>
+    <h1>Your land records</h1>
+    <p>{{ total_count }} document{{ total_count|pluralize }} in your workspace.</p>
+  </div>
+  <a href="{% url 'documents:upload' %}" class="btn btn-primary">
+    {% include 'partials/icon.html' with name='icon-plus' %}Upload New Document
+  </a>
+</div>
+
+<form method="get" class="toolbar" style="margin-bottom:18px;">
+  <div class="search-field">
+    {% include 'partials/icon.html' with name='icon-search' %}
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by title or survey number" aria-label="Search documents">
+  </div>
+  <select name="status" aria-label="Filter by status" style="max-width:190px;">
+    <option value="">All statuses</option>
+    {% for value, label in status_choices %}
+    <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-filter' %}Filter</button>
+  {% if query or status_filter %}
+  <a href="{% url 'documents:list' %}" class="btn btn-ghost btn-sm">Reset</a>
+  {% endif %}
+</form>
+
+{% if object_list %}
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Document</th>
+        <th>Survey No</th>
+        <th>District / State</th>
+        <th>Status</th>
+        <th>Confidence</th>
+        <th>Uploaded</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for doc in object_list %}
+      <tr>
+        <td>
+          <div class="doc-name">
+            <span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span>
+            <span>{{ doc.original_name|truncatechars:34 }}<small>ID #{{ doc.pk }}</small></span>
+          </div>
+        </td>
+        <td>{{ doc.survey_number|default:"—" }}</td>
+        <td>{{ doc.district|default:"—" }}{% if doc.state %}<small class="muted" style="display:block;">{{ doc.state }}</small>{% endif %}</td>
+        <td><span class="pill pill-{{ doc.status }}">{{ doc.get_status_display }}</span></td>
+        <td>{% if doc.confidence %}{{ doc.confidence|floatformat:1 }}%{% else %}—{% endif %}</td>
+        <td class="nowrap">{{ doc.uploaded_at|date:"d M Y" }}</td>
+        <td class="nowrap">
+          <a href="{% url 'documents:detail' doc.pk %}" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-view' %}View</a>
+          <a href="{% url 'documents:delete' doc.pk %}" class="btn btn-ghost btn-sm" aria-label="Delete {{ doc.original_name }}">{% include 'partials/icon.html' with name='icon-delete' %}</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card empty-state">
+  <div class="empty-icon">{% include 'partials/icon.html' with name='icon-document' %}</div>
+  <h3>{% if query or status_filter %}No matching documents{% else %}No documents yet{% endif %}</h3>
+  <p>{% if query or status_filter %}Try a different search or status filter.{% else %}Upload a PDF or scanned image to start digitizing your land records.{% endif %}</p>
+  <a href="{% url 'documents:upload' %}" class="btn btn-primary">{% include 'partials/icon.html' with name='icon-upload' %}Upload your first document</a>
+</div>
+{% endif %}
+{% endblock %}

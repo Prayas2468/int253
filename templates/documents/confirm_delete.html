@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Delete {{ document.original_name }} — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-delete' %}</span>
+    <h1>Delete this document?</h1>
+    <p class="auth-sub">“{{ document.original_name }}” and all extracted fields, validation results and duplicate flags will be removed. This cannot be undone.</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="dashboard-actions">
+        <button type="submit" class="btn btn-danger">{% include 'partials/icon.html' with name='icon-delete' %}Delete document</button>
+        <a href="{% url 'documents:detail' document.pk %}" class="btn btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

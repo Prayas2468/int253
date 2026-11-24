@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Your profile — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="section-head" style="padding-top:34px;">
+  <div>
+    <span class="eyebrow">Account</span>
+    <h1>Your profile</h1>
+    <p>Manage your identity, security and workspace preferences.</p>
+  </div>
+  <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary btn-sm">
+    {% include 'partials/icon.html' with name='icon-settings' %}Edit profile
+  </a>
+</div>
+
+<div class="profile-grid">
+  <aside class="card profile-card">
+    <div class="profile-avatar">
+      {% if user.full_name %}{{ user.full_name|slice:':1'|upper }}{% else %}{% include 'partials/icon.html' with name='icon-user' %}{% endif %}
+    </div>
+    <h2>{{ user.full_name|default:user.get_username }}</h2>
+    <p>{{ user.email }}</p>
+    <span class="pill pill-neutral">{{ user.get_role_display }}</span>
+
+    <div class="profile-stats">
+      <div><strong>{{ document_count }}</strong><span>Documents</span></div>
+      <div><strong>{{ validated_count }}</strong><span>Validated</span></div>
+      <div><strong>{{ duplicate_count }}</strong><span>Duplicates</span></div>
+    </div>
+
+    <div class="dashboard-actions" style="justify-content:center;">
+      <a href="{% url 'dashboard:home' %}" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-dashboard' %}Dashboard</a>
+      <a href="{% url 'documents:list' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-document' %}Documents</a>
+    </div>
+  </aside>
+
+  <section class="card">
+    <div class="chart-head">
+      <div><h4>Account details</h4><span>Information linked to your BhoomiAI workspace</span></div>
+    </div>
+    <ul class="check-list">
+      <li>
+        <span class="check-mark">{% include 'partials/icon.html' with name='icon-mail' %}</span>
+        <div><strong>Email address</strong><span>{{ user.email }}</span></div>
+      </li>
+      <li>
+        <span class="check-mark">{% include 'partials/icon.html' with name='icon-user' %}</span>
+        <div><strong>Full name</strong><span>{{ user.full_name|default:"Not set" }}</span></div>
+      </li>
+      <li>
+        <span class="check-mark">{% include 'partials/icon.html' with name='icon-shield' %}</span>
+        <div><strong>Role</strong><span>{{ user.get_role_display }}</span></div>
+      </li>
+      <li>
+        <span class="check-mark">{% include 'partials/icon.html' with name='icon-sun' %}</span>
+        <div><strong>Theme preference</strong><span>{{ user.get_theme_preference_display }}</span></div>
+      </li>
+      <li>
+        <span class="check-mark">{% include 'partials/icon.html' with name='icon-clock' %}</span>
+        <div><strong>Member since</strong><span>{{ user.date_joined|date:"d M Y" }}</span></div>
+      </li>
+    </ul>
+
+    <div class="divider"></div>
+    <div class="meta-row">
+      <span class="meta-item">{% include 'partials/icon.html' with name='icon-layers' %} Role-aware access</span>
+      <span class="meta-item">{% include 'partials/icon.html' with name='icon-shield' %} CSRF-protected actions</span>
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Create account — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="auth-shell split glass">
+  <aside class="auth-hero" aria-label="BhoomiAI introduction">
+    <div class="auth-hero-top">
+      <img src="{% static 'images/logo-dark.svg' %}" alt="BhoomiAI">
+      <span class="auth-hero-badge"><span class="dot"></span>Free workspace</span>
+    </div>
+
+    <div class="auth-hero-body">
+      <h2>Start digitizing <span>land records</span> today.</h2>
+      <p>Create a workspace, upload your first Record of Rights, and get structured, validated data in under a minute.</p>
+      <ul class="auth-hero-list">
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-upload' %}</span> Drag-and-drop PDF and image uploads</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-validate' %}</span> Automatic rule-based validation</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-report' %}</span> CSV, Excel and PDF exports</li>
+      </ul>
+    </div>
+
+    <div class="auth-hero-stats">
+      <div><strong>5</strong><span>Validation rules</span></div>
+      <div><strong>3</strong><span>Export formats</span></div>
+      <div><strong>24/7</strong><span>Always available</span></div>
+    </div>
+  </aside>
+
+  <section class="auth-main">
+    <div class="auth-card glass">
+      <span class="auth-eyebrow">{% include 'partials/icon.html' with name='icon-sparkle' %}Get started</span>
+      <h1>Create your account</h1>
+      <p class="auth-sub">A free workspace for land record digitization and validation.</p>
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-error" role="alert">
+        {% include 'partials/icon.html' with name='icon-alert' %}
+        <span>{{ form.non_field_errors|join:", " }}</span>
+      </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-field">
+          <label for="{{ form.full_name.id_for_label }}">Full name</label>
+          {{ form.full_name }}
+          {% if form.full_name.errors %}<span class="form-error">{{ form.full_name.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="form-field">
+          <label for="{{ form.email.id_for_label }}">Email address</label>
+          {{ form.email }}
+          {% if form.email.errors %}<span class="form-error">{{ form.email.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="form-field">
+          <label for="{{ form.password1.id_for_label }}">Password</label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}<span class="form-error">{{ form.password1.errors|join:", " }}</span>{% endif %}
+          <span class="helptext">At least 8 characters. Avoid common or numeric-only passwords.</span>
+        </div>
+
+        <div class="form-field">
+          <label for="{{ form.password2.id_for_label }}">Confirm password</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}<span class="form-error">{{ form.password2.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          {% include 'partials/icon.html' with name='icon-sparkle' %}Create account
+        </button>
+      </form>
+
+      <div class="auth-divider">Already registered</div>
+      <a href="{% url 'accounts:login' %}" class="btn btn-ghost btn-block">
+        {% include 'partials/icon.html' with name='icon-lock' %}Sign in instead
+      </a>
+
+      <p class="auth-alt">Your uploads stay private to your account.</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

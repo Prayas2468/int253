@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home - BhoomiAI{% endblock %}
+{% block content %}
+<div class="hero" style="background-image:url('{% static "images/hero-land.svg" %}');">
+    <h1>Welcome to BhoomiAI</h1>
+    <p>Manage your land documents efficiently.</p>
+    <a href="{% url 'documents:upload' %}" class="btn-primary">Get Started</a>
+</div>
+{% endblock %}

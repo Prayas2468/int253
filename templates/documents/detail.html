@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ document.original_name }} — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="section-head" style="padding-top:34px;">
+  <div>
+    <span class="eyebrow">Document #{{ document.pk }}</span>
+    <h1 style="font-size:clamp(1.5rem,3vw,2.1rem);word-break:break-word;">{{ document.original_name }}</h1>
+    <div class="meta-row">
+      <span class="pill pill-{{ document.status }}">{{ document.get_status_display }}</span>
+      <span class="meta-item">{% include 'partials/icon.html' with name='icon-clock' %} {{ document.uploaded_at|date:"d M Y, H:i" }}</span>
+      {% if document.state %}<span class="meta-item">{% include 'partials/icon.html' with name='icon-map-pin' %} {{ document.district }}, {{ document.state }}</span>{% endif %}
+      <span class="meta-item">{% include 'partials/icon.html' with name='icon-ocr' %} {{ document.confidence|floatformat:1 }}% confidence</span>
+    </div>
+  </div>
+  <div class="dashboard-actions">
+    <a href="{% url 'documents:list' %}" class="btn btn-ghost btn-sm">Back</a>
+    <a href="{% url 'documents:delete' document.pk %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-delete' %}Delete</a>
+    <form method="post" action="{% url 'documents:run_ocr' document.pk %}" data-loading>
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-ocr' %}Run OCR</button>
+    </form>
+  </div>
+</div>
+
+<div class="detail-grid">
+  <section class="card">
+    <div class="chart-head"><div><h4>Document preview</h4><span>Original uploaded file</span></div></div>
+    <div class="preview-frame">
+      {% if '.pdf' in document.file.name|lower %}
+        <iframe src="{{ document.file.url }}" title="PDF preview"></iframe>
+      {% elif '.png' in document.file.name|lower or '.jpg' in document.file.name|lower or '.jpeg' in document.file.name|lower or '.webp' in document.file.name|lower or '.bmp' in document.file.name|lower or '.tif' in document.file.name|lower %}
+        <img src="{{ document.file.url }}" alt="Preview of {{ document.original_name }}">
+      {% else %}
+        <div class="preview-empty">
+          {% include 'partials/icon.html' with name='icon-document' %}
+          <p>Preview is not available for this file type.</p>
+          <a href="{{ document.file.url }}" class="btn btn-soft btn-sm" target="_blank" rel="noopener">Open file</a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="divider"></div>
+    <dl class="meta-row" style="margin:0;">
+      <span class="meta-item"><strong>Survey:</strong>&nbsp;{{ document.survey_number|default:"—" }}</span>
+      <span class="meta-item"><strong>Area:</strong>&nbsp;{{ document.area|default:"—" }}</span>
+      <span class="meta-item"><strong>Owner:</strong>&nbsp;{{ document.owner_name|default:"—" }}</span>
+    </dl>
+  </section>
+
+  <section class="card">
+    <div class="chart-head">
+      <div><h4>Extracted fields</h4><span>OCR confidence per field</span></div>
+      <span class="pill {% if summary.percent >= 80 %}pill-done{% elif summary.percent >= 50 %}pill-pending{% else %}pill-failed{% endif %}">{{ summary.percent }}% valid</span>
+    </div>
+
+    {% for field in fields %}
+    <div class="field-row">
+      <div class="field-head">
+        <strong>{{ field.field_name }}</strong>
+        <span class="field-conf">{{ field.confidence|floatformat:1 }}%</span>
+      </div>
+      <div class="field-value">{{ field.field_value }}</div>
+      <div class="conf-bar"><span class="{% if field.confidence < 50 %}low{% endif %}" style="width: {{ field.confidence|floatformat:0 }}%;"></span></div>
+    </div>
+    {% empty %}
+    <div class="empty-state" style="padding:26px 8px;">
+      <div class="empty-icon">{% include 'partials/icon.html' with name='icon-ocr' %}</div>
+      <h3>No fields extracted yet</h3>
+      <p>Run OCR to read this document.</p>
+    </div>
+    {% endfor %}
+  </section>
+</div>
+
+<div class="grid grid-2" style="margin-top:22px;align-items:start;">
+  <section class="card">
+    <div class="chart-head">
+      <div><h4>Validation rules</h4><span>{{ summary.passed }} passed · {{ summary.failed }} failed</span></div>
+      <form method="post" action="{% url 'validation:run' document.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-refresh' %}Re-run</button>
+      </form>
+    </div>
+    <ul class="check-list">
+      {% for result in validations %}
+      <li>
+        <span class="check-mark {% if not result.passed %}fail{% endif %}">
+          {% if result.passed %}{% include 'partials/icon.html' with name='icon-check' %}{% else %}{% include 'partials/icon.html' with name='icon-close' %}{% endif %}
+        </span>
+        <div>
+          <strong>{{ result.rule.name }}</strong>
+          <span>{{ result.message|default:result.rule.description }}</span>
+        </div>
+      </li>
+      {% empty %}
+      <li><div><strong>No validation results</strong><span>Run OCR or validation to generate rule results.</span></div></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="card">
+    <div class="chart-head"><div><h4>Duplicate candidates</h4><span>Records with similar identifiers</span></div></div>
+    {% if duplicates %}
+      {% for candidate in duplicates %}
+      <div class="compare-card" style="margin-bottom:12px;">
+        <h4>{{ candidate.matched_document.original_name|truncatechars:40 }}</h4>
+        <span class="muted">Similarity {{ candidate.similarity|floatformat:0 }}%{% if candidate.reviewed %} · reviewed{% endif %}</span>
+        <div class="similarity-meter"><span style="width: {{ candidate.similarity|floatformat:0 }}%;"></span></div>
+        <a href="{% url 'documents:detail' candidate.matched_document.pk %}" class="btn btn-ghost btn-sm" style="margin-top:12px;">Compare</a>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="muted" style="margin:0;">No duplicates found for this record.</p>
+      <a href="{% url 'duplicates:list' %}" class="btn btn-soft btn-sm" style="margin-top:14px;">Open duplicate queue</a>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

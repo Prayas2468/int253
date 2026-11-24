@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Sign in — BhoomiAI{% endblock %}
+
+{% block content %}
+<div class="auth-shell split glass">
+  <aside class="auth-hero" aria-label="BhoomiAI introduction">
+    <div class="auth-hero-top">
+      <img src="{% static 'images/logo-dark.svg' %}" alt="BhoomiAI">
+      <span class="auth-hero-badge"><span class="dot"></span>Secure portal</span>
+    </div>
+
+    <div class="auth-hero-body">
+      <h2>Every land record, <span>digitized</span> and verified.</h2>
+      <p>Sign in to read scanned Records of Rights with OCR, validate every field against statutory rules, and export audit-ready reports.</p>
+      <ul class="auth-hero-list">
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-ocr' %}</span> Tesseract OCR with per-field confidence</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-shield' %}</span> Five-rule validation and duplicate detection</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-map-pin' %}</span> State-level analytics on a live India map</li>
+      </ul>
+    </div>
+
+    <div class="auth-hero-stats">
+      <div><strong>99.2%</strong><span>Extraction accuracy</span></div>
+      <div><strong>15+</strong><span>States covered</span></div>
+      <div><strong>&lt; 60s</strong><span>Per record</span></div>
+    </div>
+  </aside>
+
+  <section class="auth-main">
+    <div class="auth-card glass">
+      <span class="auth-eyebrow">{% include 'partials/icon.html' with name='icon-lock' %}Welcome back</span>
+      <h1>Sign in to BhoomiAI</h1>
+      <p class="auth-sub">Access your document vault, validation queue and analytics.</p>
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-error" role="alert">
+        {% include 'partials/icon.html' with name='icon-alert' %}
+        <span>{{ form.non_field_errors|join:", " }}</span>
+      </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <div class="form-field">
+          <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+          {{ form.username }}
+          {% if form.username.errors %}<span class="form-error">{{ form.username.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="form-field">
+          <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+          {{ form.password }}
+          {% if form.password.errors %}<span class="form-error">{{ form.password.errors|join:", " }}</span>{% endif %}
+        </div>
+
+        <div class="auth-row">
+          <label><input type="checkbox" name="remember_me" value="1"> Remember me</label>
+          <span class="small muted">Protected by CSRF</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          {% include 'partials/icon.html' with name='icon-lock' %}Sign in
+        </button>
+      </form>
+
+      <div class="auth-divider">New to BhoomiAI</div>
+      <a href="{% url 'accounts:signup' %}" class="btn btn-ghost btn-block">
+        {% include 'partials/icon.html' with name='icon-sparkle' %}Create an account
+      </a>
+
+      <div class="auth-demo">
+        <strong>Demo workspace:</strong> sample land records across 11 states are pre-loaded. Sign in with your BhoomiAI administrator account.
+      </div>
+
+      <p class="auth-alt">By signing in you agree to lawful use of land record data.</p>
+    </div>
+  </section>
+</div>
+{% endblock %}

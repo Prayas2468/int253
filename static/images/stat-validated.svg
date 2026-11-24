@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="Verified land record">
+  <defs>
+    <linearGradient id="svGreen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8FD6B4"/><stop offset="1" stop-color="#1F9D6B"/>
+    </linearGradient>
+    <linearGradient id="svNavy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2457A6"/><stop offset="1" stop-color="#17365D"/>
+    </linearGradient>
+  </defs>
+  <circle cx="48" cy="48" r="40" fill="#E7F6EF"/>
+  <path d="M48 12l28 11v22c0 16-11.5 29.5-28 35-16.5-5.5-28-19-28-35V23z" fill="url(#svGreen)"/>
+  <path d="M48 18l22 8.6V45c0 12.6-8.8 23.4-22 28.4C34.8 68.4 26 57.6 26 45V26.6z" fill="#FFFFFF" opacity="0.9"/>
+  <path d="M36 46l8 8 16-17" fill="none" stroke="#1F9D6B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(66 12)">
+    <circle cx="14" cy="14" r="12" fill="url(#svNavy)"/>
+    <rect x="8" y="8" width="12" height="12" rx="2.5" fill="none" stroke="#8FBCF2" stroke-width="1.6"/>
+    <circle cx="14" cy="14" r="2.6" fill="#E94B5A"/>
+  </g>
+  <g fill="#1F9D6B" opacity="0.55">
+    <circle cx="18" cy="24" r="2.4"/>
+    <circle cx="78" cy="68" r="2"/>
+    <circle cx="16" cy="62" r="1.6"/>
+  </g>
+</svg>
