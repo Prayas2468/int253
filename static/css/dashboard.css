@@ -66,24 +66,15 @@
 .activity-feed .activity-dot.failed { background: var(--danger); }
 .activity-feed time { display: block; color: var(--muted); font-size: 0.76rem; }
 
-@media (max-width: 900px) {
-    .india-map { height: 400px; min-height: 320px; }
-}
-
-@media (max-width: 680px) {
-    .dashboard-hero { padding-top: 22px; }
-    .chart-body { height: 240px; }
-    .chart-body.short { height: 230px; }
-    .india-map { height: 300px; min-height: 260px; }
-}
-
 /* ---------- India map ---------- */
+/* Fixed-height, full-width map box: Leaflet fills 100% of this box, so the
+   India geometry always fits without stretching or overflowing the card. */
 .india-map {
     position: relative;
     width: 100%;
-    height: 400px;
-    min-height: 400px;
-    max-height: 400px;
+    height: 460px;
+    min-height: 460px;
+    max-height: 460px;
     margin: 0 auto;
     border-radius: 12px;
     overflow: hidden;
@@ -133,9 +124,10 @@
 
 .india-map-fallback {
     position: relative;
-    height: 400px;
-    min-height: 400px;
-    max-height: 400px;
+    width: 100%;
+    height: 460px;
+    min-height: 460px;
+    max-height: 460px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -163,6 +155,20 @@
     font-size: 0.76rem;
     color: var(--muted);
     text-align: center;
+}
+
+/* Responsive map sizing (kept after the base rules so these heights win). */
+@media (max-width: 900px) {
+    .india-map,
+    .india-map-fallback { height: 400px; min-height: 400px; max-height: 400px; }
+}
+
+@media (max-width: 680px) {
+    .dashboard-hero { padding-top: 22px; }
+    .chart-body { height: 240px; }
+    .chart-body.short { height: 230px; }
+    .india-map,
+    .india-map-fallback { height: 320px; min-height: 320px; max-height: 320px; }
 }
 
 .legend-dot {

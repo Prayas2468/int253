@@ -18,8 +18,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/tokens.css' %}?v=20261124i">
-  <link rel="stylesheet" href="{% static 'css/base.css' %}?v=20261124i">
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}?v=20261124j">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}?v=20261124j">
   {% block extra_head %}{% endblock %}
 </head>
 <body {% if user.is_authenticated %}data-live-url="{% url 'core:live' %}"{% endif %}>
@@ -37,8 +37,8 @@
 
   {% include 'partials/footer.html' %}
 
-  <script src="{% static 'js/theme.js' %}?v=20261124i"></script>
-  <script src="{% static 'js/app.js' %}?v=20261124i"></script>
+  <script src="{% static 'js/theme.js' %}?v=20261124j"></script>
+  <script src="{% static 'js/app.js' %}?v=20261124j"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   {% block scripts %}{% endblock %}
   {% block extra_js %}{% endblock %}

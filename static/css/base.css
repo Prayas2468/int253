@@ -153,11 +153,6 @@ button, input, select, textarea { font: inherit; }
     display: block;
 }
 
-.logo-light { display: block !important; }
-.logo-dark { display: none !important; }
-[data-theme="dark"] .logo-light { display: none !important; }
-[data-theme="dark"] .logo-dark { display: block !important; }
-
 /* Single <img> logo whose artwork swaps with the active theme. */
 .brand-logo {
     display: block;

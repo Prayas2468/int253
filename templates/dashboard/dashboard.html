@@ -4,7 +4,7 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=20261124i">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=20261124j">
 {% endblock %}
 
 {% block content %}
@@ -122,7 +122,7 @@
     </div>
     <div id="india-map" class="india-map" data-geojson-url="{% static 'data/india-states.geojson' %}" role="application" aria-label="Map of India showing document counts by state"></div>
     <div id="india-map-fallback" class="india-map-fallback" hidden>
-      <img src="{% static 'images/india-map.svg' %}?v=20261124i" alt="Map of India showing state and union territory boundaries">
+      <img src="{% static 'images/india-map.svg' %}?v=20261124j" alt="Map of India showing state and union territory boundaries">
       <p>Interactive map unavailable — showing the static state boundary map.</p>
     </div>
     <div class="map-legend"><span class="legend-dot"></span> State boundaries &amp; document volume · {{ map_points|length }} states reporting</div>
@@ -222,5 +222,5 @@
 
 {% block scripts %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="{% static 'js/dashboard.js' %}?v=20261124i"></script>
+<script src="{% static 'js/dashboard.js' %}?v=20261124j"></script>
 {% endblock %}
