@@ -144,7 +144,6 @@ All analytics values come from the database or `ml_artifacts/metrics.json`. **No
 ```bash
 git clone https://github.com/sachin-gautam-12/BhoomiAI-Smart-Land-Record-System.git
 cd BhoomiAI-Smart-Land-Record-System
-git checkout feature/predictive-delays
 ```
 
 ### 2. Create and activate a virtual environment
