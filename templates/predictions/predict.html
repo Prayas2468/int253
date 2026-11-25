@@ -1,0 +1,192 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}Delay Prediction — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Machine learning · delay prediction</span>
+    <h1>Predict land acquisition delay</h1>
+    <p>
+      Enter a project snapshot and run the active model. The saved prediction includes
+      a delay probability, risk band, important contributing factors and mitigation suggestions.
+    </p>
+  </div>
+  <div class="page-actions">
+    {% if model_ready %}
+    <span class="pill pill-success">Model ready</span>
+    {% else %}
+    <span class="pill pill-pending">Model training required</span>
+    {% endif %}
+    <a href="{% url 'predictions:model_performance' %}" class="btn btn-ghost btn-sm">Model performance</a>
+  </div>
+</div>
+
+{% if not model_ready %}
+<div class="alert alert-info" role="alert">
+  {% include 'partials/icon.html' with name='icon-alert' %}
+  <span>The classifier artifact was not found. The first prediction triggers training from the synthetic dataset.</span>
+</div>
+{% endif %}
+
+{% if form.non_field_errors %}
+<div class="alert alert-error" role="alert">
+  {% include 'partials/icon.html' with name='icon-alert' %}
+  <span>{{ form.non_field_errors|join:", " }}</span>
+</div>
+{% endif %}
+
+<form method="post" class="panel form-card" novalidate data-loading>
+  {% csrf_token %}
+
+  <div class="form-section">
+    <h3>Scenario source</h3>
+    <p>Select an existing project to update its snapshot and prediction, or leave blank to create a new scenario project.</p>
+    <div class="form-grid">
+      <div class="form-field full">
+        <label for="{{ form.project.id_for_label }}">{{ form.project.label }}</label>
+        {{ form.project }}
+        {% if form.project.errors %}<span class="form-error">{{ form.project.errors|join:", " }}</span>{% endif %}
+        {% if selected_project %}
+        <span class="form-help">
+          Loaded from <a href="{% url 'predictions:project_detail' selected_project.pk %}">{{ selected_project.project_id }}</a>.
+          Submitting will overwrite that project's current-state snapshot.
+        </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Project identity</h3>
+    <div class="form-grid">
+      <div class="form-field full">
+        <label for="{{ form.project_name.id_for_label }}">Project name</label>
+        {{ form.project_name }}
+        {% if form.project_name.errors %}<span class="form-error">{{ form.project_name.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.state.id_for_label }}">State</label>
+        {{ form.state }}
+        {% if form.state.errors %}<span class="form-error">{{ form.state.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.district.id_for_label }}">District</label>
+        {{ form.district }}
+        {% if form.district.errors %}<span class="form-error">{{ form.district.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.project_type.id_for_label }}">Project type</label>
+        {{ form.project_type }}
+        {% if form.project_type.errors %}<span class="form-error">{{ form.project_type.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.land_area_acres.id_for_label }}">Land area (acres)</label>
+        {{ form.land_area_acres }}
+        {% if form.land_area_acres.errors %}<span class="form-error">{{ form.land_area_acres.errors|join:", " }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Land acquisition</h3>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="{{ form.total_land_parcels.id_for_label }}">Total land parcels</label>
+        {{ form.total_land_parcels }}
+        {% if form.total_land_parcels.errors %}<span class="form-error">{{ form.total_land_parcels.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.acquired_land_parcels.id_for_label }}">Acquired land parcels</label>
+        {{ form.acquired_land_parcels }}
+        {% if form.acquired_land_parcels.errors %}<span class="form-error">{{ form.acquired_land_parcels.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.ownership_disputes.id_for_label }}">Ownership disputes</label>
+        {{ form.ownership_disputes }}
+        {% if form.ownership_disputes.errors %}<span class="form-error">{{ form.ownership_disputes.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.stakeholder_issues.id_for_label }}">Stakeholder issues</label>
+        {{ form.stakeholder_issues }}
+        {% if form.stakeholder_issues.errors %}<span class="form-error">{{ form.stakeholder_issues.errors|join:", " }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Compensation and compliance</h3>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="{{ form.compensation_status.id_for_label }}">Compensation status</label>
+        {{ form.compensation_status }}
+        {% if form.compensation_status.errors %}<span class="form-error">{{ form.compensation_status.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.compensation_completion_percentage.id_for_label }}">Compensation completion (%)</label>
+        {{ form.compensation_completion_percentage }}
+        {% if form.compensation_completion_percentage.errors %}<span class="form-error">{{ form.compensation_completion_percentage.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.approval_status.id_for_label }}">Approval status</label>
+        {{ form.approval_status }}
+        {% if form.approval_status.errors %}<span class="form-error">{{ form.approval_status.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.environmental_clearance_status.id_for_label }}">Environmental clearance</label>
+        {{ form.environmental_clearance_status }}
+        {% if form.environmental_clearance_status.errors %}<span class="form-error">{{ form.environmental_clearance_status.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.legal_case_count.id_for_label }}">Legal case count</label>
+        {{ form.legal_case_count }}
+        {% if form.legal_case_count.errors %}<span class="form-error">{{ form.legal_case_count.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.rehabilitation_status.id_for_label }}">Rehabilitation status</label>
+        {{ form.rehabilitation_status }}
+        {% if form.rehabilitation_status.errors %}<span class="form-error">{{ form.rehabilitation_status.errors|join:", " }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Budget and schedule</h3>
+    <div class="form-grid">
+      <div class="form-field">
+        <label for="{{ form.project_budget.id_for_label }}">Project budget (INR crore)</label>
+        {{ form.project_budget }}
+        {% if form.project_budget.errors %}<span class="form-error">{{ form.project_budget.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.allocated_budget.id_for_label }}">Allocated budget (INR crore)</label>
+        {{ form.allocated_budget }}
+        {% if form.allocated_budget.errors %}<span class="form-error">{{ form.allocated_budget.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.project_duration_months.id_for_label }}">Project duration (months)</label>
+        {{ form.project_duration_months }}
+        {% if form.project_duration_months.errors %}<span class="form-error">{{ form.project_duration_months.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.elapsed_months.id_for_label }}">Elapsed months</label>
+        {{ form.elapsed_months }}
+        {% if form.elapsed_months.errors %}<span class="form-error">{{ form.elapsed_months.errors|join:", " }}</span>{% endif %}
+      </div>
+      <div class="form-field">
+        <label for="{{ form.start_date.id_for_label }}">Start date (optional)</label>
+        {{ form.start_date }}
+        <span class="form-help">{{ form.start_date.help_text }}</span>
+        {% if form.start_date.errors %}<span class="form-error">{{ form.start_date.errors|join:", " }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">
+      {% include 'partials/icon.html' with name='icon-sparkle' %}Predict delay
+    </button>
+    <a href="{% url 'predictions:monitoring' %}" class="btn btn-ghost">Cancel</a>
+  </div>
+</form>
+{% endblock %}

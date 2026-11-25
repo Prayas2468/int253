@@ -1,0 +1,32 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}Delete {{ project.project_id }} — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Project register</span>
+    <h1>Delete project</h1>
+    <p>This permanently removes the project, its predictions, factors and mitigation plans.</p>
+  </div>
+</div>
+
+<div class="panel" style="max-width:640px;">
+  <h3 style="margin-top:0;">{{ project.project_id }} — {{ project.project_name }}</h3>
+  <dl class="detail-list">
+    <div><dt>Location</dt><dd>{{ project.district }}, {{ project.state }}</dd></div>
+    <div><dt>Status</dt><dd>{{ project.get_status_display }}</dd></div>
+    <div><dt>Predictions</dt><dd>{{ project.predictions.count }}</dd></div>
+    <div><dt>Mitigation plans</dt><dd>{{ project.mitigation_plans.count }}</dd></div>
+  </dl>
+  <div class="alert alert-error" style="margin-top:16px;">
+    {% include 'partials/icon.html' with name='icon-alert' %}
+    <span>Deletion cannot be undone. Archive the project instead if you only want to hide it from dashboards.</span>
+  </div>
+  <form method="post" class="form-actions">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">{% include 'partials/icon.html' with name='icon-delete' %}Delete permanently</button>
+    <a href="{% url 'predictions:project_detail' project.pk %}" class="btn btn-ghost">Cancel</a>
+  </form>
+</div>
+{% endblock %}

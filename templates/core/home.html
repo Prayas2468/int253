@@ -1,66 +1,77 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}BhoomiAI — Transforming Land Records into Digital Assets{% endblock %}
+{% block title %}BhoomiAI — Predictive Analytics for Land Acquisition Delays{% endblock %}
 
 {% block content %}
 <section class="hero">
   <div class="hero-grid">
     <div class="hero-text reveal">
-      <span class="eyebrow">Land record intelligence</span>
-      <h1>Transforming Land Records into <span class="highlight">Intelligent</span> Digital Assets.</h1>
+      <span class="eyebrow">Smart automation · predictive analytics</span>
+      <h1>Detect land acquisition delays <span class="highlight">before</span> they happen.</h1>
       <p class="hero-lead">
-        Digitize, extract, validate, and manage land records with AI-powered document
-        processing. Fast, accurate, and secure.
+        BhoomiAI is a predictive analytics platform that applies machine learning to
+        synthetic land acquisition project data — identifying delay risk, explaining the
+        contributing factors and supporting preventive decisions through an interactive
+        monitoring dashboard.
       </p>
       <div class="hero-actions">
-        <a href="{% url 'documents:upload' %}" class="btn btn-primary">
-          {% include 'partials/icon.html' with name='icon-upload' %}Upload Land Record
+        {% if user.is_authenticated %}
+        <a href="{% url 'dashboard:home' %}" class="btn btn-primary">
+          {% include 'partials/icon.html' with name='icon-dashboard' %}Open analytics dashboard
         </a>
-        <a href="#samples" class="btn btn-ghost">
-          {% include 'partials/icon.html' with name='icon-layers' %}Explore Sample Records
+        {% else %}
+        <a href="{% url 'accounts:login' %}" class="btn btn-primary">
+          {% include 'partials/icon.html' with name='icon-dashboard' %}Open analytics dashboard
+        </a>
+        {% endif %}
+        <a href="{% url 'predictions:predict' %}" class="btn btn-ghost">
+          {% include 'partials/icon.html' with name='icon-sparkle' %}Run a delay prediction
         </a>
       </div>
       <div class="hero-metrics">
         <div class="hero-metric">
-          <strong>{{ total_documents|default:0 }}+</strong>
-          <span>Records digitized</span>
+          <strong>{{ total_projects|default:0 }}</strong>
+          <span>Projects analysed</span>
         </div>
         <div class="hero-metric">
-          <strong>{{ districts_covered|default:0 }}</strong>
-          <span>Districts covered</span>
+          <strong>{{ high_risk|default:0 }}</strong>
+          <span>High-risk flags</span>
         </div>
         <div class="hero-metric">
-          <strong>99.2%</strong>
-          <span>Extraction accuracy</span>
+          <strong>{% if selected_metrics.roc_auc %}{{ selected_metrics.roc_auc }}{% else %}—{% endif %}</strong>
+          <span>Model ROC-AUC</span>
         </div>
         <div class="hero-metric">
-          <strong>5</strong>
-          <span>Validation checks</span>
+          <strong>{{ prediction_count|default:0 }}</strong>
+          <span>Stored predictions</span>
         </div>
       </div>
     </div>
 
     <div class="hero-visual reveal">
       <figure class="hero-photo">
-        <img src="{% static 'images/land-map.jpg' %}" alt="Aerial view of cultivated land parcels">
+        <img src="{% static 'images/land-map.jpg' %}" alt="Aerial view of land parcels under acquisition study">
       </figure>
       <div class="float-card fc-top">
-        <span class="fc-icon">{% include 'partials/icon.html' with name='icon-ocr' %}</span>
-        <div><strong>OCR Confidence</strong><span>98.4% · Survey 142/2</span></div>
+        <span class="fc-icon">{% include 'partials/icon.html' with name='icon-sparkle' %}</span>
+        <div>
+          <strong>{% if focus_prediction %}Delay risk {{ focus_prediction.probability_percent }}%{% else %}Model ready{% endif %}</strong>
+          <span>{% if focus_prediction %}{{ focus_prediction.risk_level }} risk · {{ selected_algorithm }}{% else %}{{ selected_algorithm|default:"Train the model to begin" }}{% endif %}</span>
+        </div>
       </div>
       <div class="float-card fc-right">
-        <span class="fc-icon">{% include 'partials/icon.html' with name='icon-check' %}</span>
-        <div><strong>Status: Verified</strong><span>5 / 5 rules passed</span></div>
+        <span class="fc-icon">{% include 'partials/icon.html' with name='icon-alert' %}</span>
+        <div><strong>{{ high_risk|default:0 }} high-risk projects</strong><span>Flagged by the active model</span></div>
       </div>
       <div class="float-card fc-bottom">
         <span class="fc-icon">{% include 'partials/icon.html' with name='icon-shield' %}</span>
-        <div><strong>Secure Storage</strong><span>Encrypted · Audited</span></div>
+        <div><strong>Explainable output</strong><span>Probability, factors and mitigation</span></div>
       </div>
 
       <div class="hero-map-card" aria-hidden="true">
         <img src="{% static 'images/india-map.svg' %}?v=20261124i" alt="" width="620" height="700">
         <div class="hm-meta">
-          <strong>{{ districts_covered|default:0 }} districts</strong>
+          <strong>{{ avg_acquisition|default:0 }}% avg acquisition</strong>
           <span class="hm-live">Live</span>
         </div>
       </div>
@@ -72,25 +83,30 @@
   <div class="section-head">
     <div>
       <span class="eyebrow">Workflow</span>
-      <h2>From scanned paper to verified data in four steps</h2>
-      <p>Every document moves through the same auditable pipeline.</p>
+      <h2>From synthetic data to preventive action in four steps</h2>
+      <p>A reproducible analytics pipeline built for academic demonstration.</p>
     </div>
-    <a href="{% url 'documents:upload' %}" class="btn btn-soft btn-sm">Start a record {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
+    <a href="{% url 'predictions:model_performance' %}" class="btn btn-soft btn-sm">Model performance {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
   </div>
 
   <div class="section-banner">
     <div class="section-banner-media">
-      <img src="{% static 'images/ai-scan.jpg' %}" alt="Land record documents being scanned and digitized by AI OCR" width="900" height="620">
-      <span class="photo-chip">AI OCR · field-level confidence</span>
+      <img src="{% static 'images/ai-scan.jpg' %}" alt="Analytical view of project data and model outputs" width="900" height="620">
+      <span class="photo-chip">Synthetic dataset · {{ dataset_rows|default:0 }} project records</span>
     </div>
     <div class="section-banner-copy">
       <span class="eyebrow">Inside the pipeline</span>
-      <h3>Scanned paper becomes structured, searchable data</h3>
-      <p>Every upload is scanned, read and checked automatically — so your team spends time reviewing exceptions, not retyping fields.</p>
+      <h3>The dataset is synthetic, the machine learning is real</h3>
+      <p>
+        A documented generator creates realistic land-acquisition records with meaningful
+        relationships between ownership disputes, compensation progress, approvals, legal
+        cases, clearance and delay outcomes. The target and future outcome fields are
+        excluded from the model inputs to prevent leakage.
+      </p>
       <ul class="section-banner-list">
-        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Survey, area, district and owner fields extracted with confidence scores</li>
-        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Low-confidence fields queued for a human reviewer</li>
-        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Output ready for CSV, Excel and PDF reporting</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> {{ dataset_rows|default:0 }} labelled synthetic projects, clearly marked in the interface</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Stratified train/test split with a shared preprocessing pipeline</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Random Forest, Decision Tree and Logistic Regression compared on real metrics</li>
       </ul>
     </div>
   </div>
@@ -98,27 +114,27 @@
   <div class="steps">
     <article class="card card-hover step-card">
       <span class="step-num">01</span>
-      <span class="card-icon">{% include 'partials/icon.html' with name='icon-upload' %}</span>
-      <h3>Upload Document</h3>
-      <p>Drag in a PDF or scan of a Record of Rights, khasra or plot document.</p>
+      <span class="card-icon">{% include 'partials/icon.html' with name='icon-layers' %}</span>
+      <h3>Generate or import data</h3>
+      <p>Use the 2,400-row synthetic dataset or import your own CSV with the same project columns.</p>
     </article>
     <article class="card card-hover step-card">
       <span class="step-num">02</span>
-      <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-ocr' %}</span>
-      <h3>AI OCR</h3>
-      <p>Tesseract reads the page and extracts survey, area, district and owner fields.</p>
+      <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-activity' %}</span>
+      <h3>Train and compare</h3>
+      <p>Three classifiers are trained, evaluated and the best ROC-AUC pipeline is activated.</p>
     </article>
     <article class="card card-hover step-card">
       <span class="step-num">03</span>
-      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-validate' %}</span>
-      <h3>Validate Data</h3>
-      <p>Rule-based checks flag missing fields, low confidence and inconsistent values.</p>
+      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-sparkle' %}</span>
+      <h3>Predict and explain</h3>
+      <p>Each prediction stores probability, risk band, contributing factors and a duration estimate.</p>
     </article>
     <article class="card card-hover step-card">
       <span class="step-num">04</span>
-      <span class="card-icon gold">{% include 'partials/icon.html' with name='icon-report' %}</span>
-      <h3>Export Report</h3>
-      <p>Download verified records as CSV, Excel or a print-ready PDF report.</p>
+      <span class="card-icon gold">{% include 'partials/icon.html' with name='icon-validate' %}</span>
+      <h3>Act on risk</h3>
+      <p>Mitigation plans turn the strongest risk factors into tracked preventive actions.</p>
     </article>
   </div>
 </section>
@@ -127,52 +143,56 @@
   <div class="section-head">
     <div>
       <span class="eyebrow">Capabilities</span>
-      <h2>Everything a land records team needs</h2>
-      <p>Purpose-built for revenue departments, registries and land banks.</p>
+      <h2>One workspace for delay risk and project monitoring</h2>
+      <p>Purpose-built for land acquisition review teams, programme managers and analysts.</p>
     </div>
   </div>
 
   <div class="section-banner reverse">
     <div class="section-banner-media">
-      <img src="{% static 'images/land-map.jpg' %}" alt="Surveyed farmland parcels seen from above with visible plot boundaries" width="900" height="620">
-      <span class="photo-chip">Parcel boundaries · state coverage</span>
+      <img src="{% static 'images/land-map.jpg' %}" alt="Surveyed parcels representing projects under acquisition" width="900" height="620">
+      <span class="photo-chip">Risk profile · monitoring · mitigation</span>
     </div>
     <div class="section-banner-copy">
-      <span class="eyebrow">Maps &amp; validation</span>
-      <h3>Plot boundaries and record rules, checked together</h3>
-      <p>State maps, parcel geometry and document rules combine into one review surface — with every result traceable to its source page.</p>
+      <span class="eyebrow">Decision support</span>
+      <h3>Every number is traceable to data or a stored model run</h3>
+      <p>
+        Dashboard counts, progress charts and risk profiles are computed from the project
+        register. Delay probabilities come from the serialized classifier, and the model
+        version behind each prediction is preserved in the audit trail.
+      </p>
       <ul class="section-banner-list">
-        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> India state boundaries and document volume in one view</li>
-        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Five configurable validation rules with pass/fail detail</li>
-        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Duplicate similarity checks across survey, owner and area</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Planned versus actual acquisition progress by elapsed months</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> Six rule-based risk areas: ownership, compensation, legal, approval, environment, rehabilitation</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-check' %}</span> CSV and PDF exports for projects, monitoring, predictions, risk and model evaluation</li>
       </ul>
     </div>
   </div>
 
   <div class="grid grid-3">
     <article class="card card-hover cap-card">
-      <span class="card-icon">{% include 'partials/icon.html' with name='icon-ocr' %}</span>
-      <div><h3>OCR Extraction</h3><p>Convert scanned pages and PDFs into structured fields with confidence scores.</p></div>
-    </article>
-    <article class="card card-hover cap-card">
-      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-validate' %}</span>
-      <div><h3>Validation Engine</h3><p>Five configurable rules check completeness, numeric area and OCR quality.</p></div>
-    </article>
-    <article class="card card-hover cap-card">
-      <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-duplicate' %}</span>
-      <div><h3>Duplicate Detection</h3><p>Similarity scoring surfaces records that share survey, owner or area.</p></div>
-    </article>
-    <article class="card card-hover cap-card">
-      <span class="card-icon gold">{% include 'partials/icon.html' with name='icon-map' %}</span>
-      <div><h3>Land Mapping</h3><p>State-level analytics on an interactive India map with live document counts.</p></div>
-    </article>
-    <article class="card card-hover cap-card">
-      <span class="card-icon">{% include 'partials/icon.html' with name='icon-report' %}</span>
-      <div><h3>Reports &amp; Exports</h3><p>Generate CSV, Excel and PDF reports directly from verified records.</p></div>
+      <span class="card-icon">{% include 'partials/icon.html' with name='icon-sparkle' %}</span>
+      <div><h3>ML delay prediction</h3><p>Real saved-model inference with probability, risk band and expected delay duration.</p></div>
     </article>
     <article class="card card-hover cap-card">
       <span class="card-icon success">{% include 'partials/icon.html' with name='icon-shield' %}</span>
-      <div><h3>Secure Storage</h3><p>Role-aware access, CSRF-protected forms and an auditable notification trail.</p></div>
+      <div><h3>Risk analytics</h3><p>State and district exposure, compensation and approval bottlenecks, legal dispute trends.</p></div>
+    </article>
+    <article class="card card-hover cap-card">
+      <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-map' %}</span>
+      <div><h3>Project monitoring</h3><p>Search, filter and sort the register by state, status, risk and predicted delay.</p></div>
+    </article>
+    <article class="card card-hover cap-card">
+      <span class="card-icon gold">{% include 'partials/icon.html' with name='icon-validate' %}</span>
+      <div><h3>Mitigation plans</h3><p>System-suggested preventive actions with a user-controlled workflow status.</p></div>
+    </article>
+    <article class="card card-hover cap-card">
+      <span class="card-icon">{% include 'partials/icon.html' with name='icon-activity' %}</span>
+      <div><h3>Model transparency</h3><p>Accuracy, precision, recall, F1, confusion matrices, ROC curves and feature importance.</p></div>
+    </article>
+    <article class="card card-hover cap-card">
+      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-report' %}</span>
+      <div><h3>Reports &amp; exports</h3><p>Working CSV and PDF exports generated from live records and persisted metrics.</p></div>
     </article>
   </div>
 </section>
@@ -180,55 +200,47 @@
 <section class="section" id="samples">
   <div class="section-head">
     <div>
-      <span class="eyebrow">Sample records</span>
-      <h2>Recently verified land records</h2>
-      <p>A live preview of records processed by the platform.</p>
+      <span class="eyebrow">Live preview</span>
+      <h2>Highest-risk projects right now</h2>
+      <p>Ordered by the latest stored delay probability for each project.</p>
     </div>
-    <a href="{% url 'documents:list' %}" class="btn btn-ghost btn-sm">View all documents {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
+    <a href="{% url 'predictions:monitoring' %}" class="btn btn-ghost btn-sm">Open monitoring {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
   </div>
 
   <div class="table-wrap">
     <table class="data-table">
       <thead>
         <tr>
-          <th>Document</th>
-          <th>Survey No</th>
-          <th>District</th>
-          <th>State</th>
+          <th>Project</th>
+          <th>Location</th>
+          <th>Acquisition</th>
+          <th>Compensation</th>
+          <th>Risk level</th>
+          <th>Delay probability</th>
           <th>Status</th>
-          <th>Confidence</th>
         </tr>
       </thead>
       <tbody>
-        {% for record in sample_records %}
+        {% for project in sample_projects %}
         <tr>
           <td>
             <div class="doc-name">
-              <span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span>
-              <span>{{ record.original_name|truncatechars:34 }}<small>ID #{{ record.pk }}</small></span>
+              <span class="file-ico">{% include 'partials/icon.html' with name='icon-layers' %}</span>
+              <span>{{ project.project_name|truncatechars:34 }}<small>{{ project.project_id }}</small></span>
             </div>
           </td>
-          <td>{{ record.survey_number|default:"—" }}</td>
-          <td>{{ record.district|default:"—" }}</td>
-          <td>{{ record.state|default:"—" }}</td>
-          <td><span class="pill pill-{{ record.status }}">{{ record.get_status_display }}</span></td>
-          <td>{{ record.confidence|floatformat:1 }}%</td>
+          <td>{{ project.district }}, {{ project.state }}</td>
+          <td>{{ project.acquisition_progress }}%</td>
+          <td>{{ project.compensation_completion_percentage|floatformat:0 }}%</td>
+          <td><span class="pill pill-{{ project.risk_level|lower }}">{{ project.risk_level }}</span></td>
+          <td>{% if project.latest_probability is not None %}{{ project.latest_probability|floatformat:3 }}{% else %}—{% endif %}</td>
+          <td><span class="pill pill-neutral">{{ project.get_status_display }}</span></td>
         </tr>
         {% empty %}
         <tr>
-          <td><div class="doc-name"><span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span><span>Pune Survey 142/2<small>Demo record</small></span></div></td>
-          <td>142/2</td><td>Pune</td><td>Maharashtra</td>
-          <td><span class="pill pill-done">Done</span></td><td>94.5%</td>
-        </tr>
-        <tr>
-          <td><div class="doc-name"><span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span><span>Lucknow Survey 210/7<small>Demo record</small></span></div></td>
-          <td>210/7</td><td>Lucknow</td><td>Uttar Pradesh</td>
-          <td><span class="pill pill-done">Done</span></td><td>89.7%</td>
-        </tr>
-        <tr>
-          <td><div class="doc-name"><span class="file-ico">{% include 'partials/icon.html' with name='icon-document' %}</span><span>Jaipur Survey 301/4<small>Demo record</small></span></div></td>
-          <td>301/4</td><td>Jaipur</td><td>Rajasthan</td>
-          <td><span class="pill pill-done">Done</span></td><td>87.9%</td>
+          <td colspan="7">
+            No project predictions yet. Import the synthetic dataset to populate this preview.
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -238,12 +250,16 @@
 
 <section class="section" id="about">
   <div class="cta-banner">
-    <span class="eyebrow" style="color:#F0C15C;justify-content:center;">Ready when you are</span>
-    <h2>Ready to digitize your first record?</h2>
-    <p>Upload a scan, run OCR and get a validated record in minutes — not weeks.</p>
+    <span class="eyebrow" style="color:#F0C15C;justify-content:center;">Smart automation</span>
+    <h2>Predictive analytics for early detection of land acquisition delays</h2>
+    <p>
+      An intelligent platform that uses machine learning on synthetic land acquisition
+      project data to identify potential delays, analyse risk factors, monitor progress and
+      support preventive decision-making through an interactive dashboard.
+    </p>
     <div class="hero-actions">
       <a href="{% url 'accounts:signup' %}" class="btn btn-accent">Create free account {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
-      <a href="{% url 'documents:upload' %}" class="btn btn-ghost">Upload a record</a>
+      <a href="{% url 'dashboard:home' %}" class="btn btn-ghost">Open dashboard</a>
     </div>
   </div>
 </section>

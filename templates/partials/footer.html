@@ -3,30 +3,35 @@
     <div class="footer-inner">
         <div class="footer-brand">
             <img class="brand-logo" src="{% static 'images/logo-light.svg' %}" alt="BhoomiAI" width="173" height="36">
-            <p>Intelligent land record digitization, OCR extraction, validation and analytics for modern land administration.</p>
+            <p>
+                Predictive Analytics System for Early Detection of Land Acquisition Delays.
+                Machine learning on synthetic project data for risk analytics, monitoring and
+                preventive decision-making.
+            </p>
         </div>
         <div class="footer-col">
-            <h4>Platform</h4>
+            <h4>Analytics</h4>
             <ul>
-                <li><a href="{% url 'dashboard:home' %}">Dashboard</a></li>
-                <li><a href="{% url 'documents:list' %}">Documents</a></li>
-                <li><a href="{% url 'validation:list' %}">Validation</a></li>
-                <li><a href="{% url 'duplicates:list' %}">Duplicates</a></li>
+                <li><a href="{% url 'dashboard:home' %}">Overview dashboard</a></li>
+                <li><a href="{% url 'predictions:risk_analytics' %}">Risk analytics</a></li>
+                <li><a href="{% url 'predictions:monitoring' %}">Project monitoring</a></li>
+                <li><a href="{% url 'predictions:model_performance' %}">Model performance</a></li>
             </ul>
         </div>
         <div class="footer-col">
-            <h4>Insights</h4>
+            <h4>Workspace</h4>
             <ul>
-                <li><a href="{% url 'reports:index' %}">Reports</a></li>
-                <li><a href="{% url 'reports:csv' %}">CSV export</a></li>
-                <li><a href="{% url 'reports:excel' %}">Excel export</a></li>
-                <li><a href="{% url 'reports:pdf' %}">PDF export</a></li>
+                <li><a href="{% url 'predictions:project_list' %}">Projects</a></li>
+                <li><a href="{% url 'predictions:predict' %}">Delay prediction</a></li>
+                <li><a href="{% url 'predictions:mitigation_list' %}">Mitigation plans</a></li>
+                <li><a href="{% url 'predictions:data_import' %}">Data import</a></li>
             </ul>
         </div>
         <div class="footer-col">
             <h4>Account</h4>
             <ul>
                 <li><a href="{% url 'core:home' %}#how-it-works">How it works</a></li>
+                <li><a href="{% url 'reports:index' %}">Reports &amp; exports</a></li>
                 <li><a href="{% url 'notifications:list' %}">Notifications</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'accounts:profile' %}">Profile</a></li>
@@ -39,6 +44,6 @@
     </div>
     <div class="footer-bottom">
         <span>&copy; 2026 BhoomiAI. All rights reserved.</span>
-        <span>Built for secure, auditable land record digitization.</span>
+        <span>Synthetic dataset · academic demonstration · model-generated predictions.</span>
     </div>
 </footer>

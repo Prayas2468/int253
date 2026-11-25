@@ -1,0 +1,112 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}Data Import — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Synthetic dataset and CSV import</span>
+    <h1>Data import</h1>
+    <p>
+      The academic workspace runs on a clearly labelled synthetic dataset. Import your own
+      CSV with the same columns, or rebuild the demo workspace from the seeded generator.
+    </p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'predictions:csv_template' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-csv' %}CSV template</a>
+    <a href="{% url 'predictions:model_performance' %}" class="btn btn-ghost btn-sm">Model performance</a>
+  </div>
+</div>
+
+<div class="dataset-card">
+  <div><strong>{{ dataset.rows|default:"—" }}</strong><span>Dataset rows</span></div>
+  <div><strong>{{ dataset.delayed|default:"—" }}</strong><span>Historically delayed</span></div>
+  <div><strong>{{ dataset.states|default:"—" }}</strong><span>States covered</span></div>
+  <div><strong>{{ project_count }}</strong><span>Projects in database</span></div>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-7">
+    <div class="panel-head">
+      <div><h3>Import a CSV file</h3><p>Required columns: project_name, state, district, project_type, total_land_parcels.</p></div>
+    </div>
+    {% if form.non_field_errors %}
+    <div class="alert alert-error" role="alert">
+      {% include 'partials/icon.html' with name='icon-alert' %}
+      <span>{{ form.non_field_errors|join:", " }}</span>
+    </div>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      <div class="drop-zone" data-dropzone>
+        <p style="margin:0 0 8px;font-weight:650;">Drop a CSV here or choose a file</p>
+        {{ form.file }}
+        {% if form.file.errors %}<span class="form-error">{{ form.file.errors|join:", " }}</span>{% endif %}
+        <p class="mini-note" style="margin:8px 0 0;">{{ form.file.help_text }}</p>
+      </div>
+      <div class="form-field" style="margin-top:14px;">
+        <label style="display:flex;align-items:center;gap:8px;font-weight:500;">
+          {{ form.predict }} {{ form.predict.label }}
+        </label>
+        <span class="form-help">{{ form.predict.help_text }}</span>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{% include 'partials/icon.html' with name='icon-upload' %}Import projects</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel span-5">
+    <div class="panel-head">
+      <div><h3>Rebuild demo workspace</h3><p>Regenerate the synthetic CSV and reseed the database.</p></div>
+    </div>
+    <p class="mini-note">
+      This removes existing synthetic projects and their predictions, then recreates
+      2,400 synthetic projects with fresh model predictions. Projects you created
+      manually are preserved.
+    </p>
+    <form method="post" data-loading>
+      {% csrf_token %}
+      <input type="hidden" name="action" value="demo">
+      <button type="submit" class="btn btn-soft">{% include 'partials/icon.html' with name='icon-refresh' %}Regenerate synthetic data</button>
+    </form>
+    <div class="divider"></div>
+    <h4 style="margin:0 0 8px;font-size:0.82rem;">Dataset file</h4>
+    <p class="mini-note" style="overflow-wrap:anywhere;"><code>{{ dataset.path }}</code></p>
+    <p class="mini-note">
+      {% if dataset.exists %}File present.{% else %}File missing — regenerate the dataset before training.{% endif %}
+      The data is synthetic and generated for academic demonstration only. No real landowner
+      or personal information is used.
+    </p>
+  </section>
+</div>
+
+<section class="panel">
+  <div class="panel-head">
+    <div><h3>Expected CSV columns</h3><p>Use the template as a starting point. Unknown extra columns are ignored.</p></div>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table table-compact">
+      <thead><tr><th>Column</th><th>Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="nowrap"><code>project_name</code></td><td>text</td><td>Human-readable project name (required).</td></tr>
+        <tr><td class="nowrap"><code>state</code></td><td>text</td><td>Indian state or union territory (required).</td></tr>
+        <tr><td class="nowrap"><code>district</code></td><td>text</td><td>District name (required).</td></tr>
+        <tr><td class="nowrap"><code>project_type</code></td><td>text</td><td>Highway Expansion, Industrial Corridor, and similar (required).</td></tr>
+        <tr><td class="nowrap"><code>total_land_parcels</code></td><td>integer</td><td>Total parcels in scope (required).</td></tr>
+        <tr><td class="nowrap"><code>acquired_land_parcels</code></td><td>integer</td><td>Parcels acquired so far.</td></tr>
+        <tr><td class="nowrap"><code>ownership_disputes</code></td><td>integer</td><td>Parcels under ownership dispute.</td></tr>
+        <tr><td class="nowrap"><code>compensation_completion_percentage</code></td><td>0–100</td><td>Share of compensation completed.</td></tr>
+        <tr><td class="nowrap"><code>approval_status</code></td><td>choice</td><td>pending, in_progress, approved, rejected.</td></tr>
+        <tr><td class="nowrap"><code>environmental_clearance_status</code></td><td>choice</td><td>pending, in_progress, cleared, rejected, not_required.</td></tr>
+        <tr><td class="nowrap"><code>rehabilitation_status</code></td><td>choice</td><td>not_started, in_progress, completed.</td></tr>
+        <tr><td class="nowrap"><code>legal_case_count</code></td><td>integer</td><td>Active legal cases.</td></tr>
+        <tr><td class="nowrap"><code>project_budget</code> / <code>allocated_budget</code></td><td>float</td><td>Budget and allocation in INR crore.</td></tr>
+        <tr><td class="nowrap"><code>project_duration_months</code> / <code>elapsed_months</code></td><td>integer</td><td>Planned duration and elapsed time.</td></tr>
+        <tr><td class="nowrap"><code>stakeholder_issues</code></td><td>integer</td><td>Unresolved stakeholder objections.</td></tr>
+        <tr><td class="nowrap"><code>start_date</code></td><td>date</td><td>ISO date; estimated from elapsed months if blank.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

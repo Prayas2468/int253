@@ -1,0 +1,180 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}Prediction #{{ prediction.pk }} — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Prediction history · result #{{ prediction.pk }}</span>
+    <h1>Delay prediction result</h1>
+    <p>
+      {{ project.project_id }} — {{ project.project_name }} ·
+      stored {{ prediction.created_at|date:"d M Y, H:i" }}.
+    </p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'predictions:project_detail' project.pk %}" class="btn btn-ghost btn-sm">Open project</a>
+    <a href="{% url 'predictions:prediction_history' %}" class="btn btn-ghost btn-sm">Prediction history</a>
+  </div>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-7">
+    <div class="result-hero">
+      <div class="result-ring"
+           style="--pct: {{ prediction.probability_percent }}; --ring-color: {% if prediction.risk_level == 'High' %}var(--danger){% elif prediction.risk_level == 'Medium' %}var(--warning){% else %}var(--success){% endif %};">
+        <div>
+          <strong>{{ prediction.probability_percent }}%</strong>
+          <span>Delay probability</span>
+        </div>
+      </div>
+      <div class="result-summary">
+        <h2>{{ prediction.predicted_outcome }} predicted</h2>
+        <p>
+          The active classifier places this scenario in the
+          <strong>{{ prediction.risk_level }}</strong> risk band.
+          {% if prediction.risk_level == 'High' %}
+          Preventive action is recommended before the next acquisition milestone.
+          {% elif prediction.risk_level == 'Medium' %}
+          Monitor the leading risk factors and confirm mitigation ownership.
+          {% else %}
+          The project is currently tracking below the medium-risk threshold.
+          {% endif %}
+        </p>
+        <div class="result-facts">
+          <div>
+            <strong>{% if prediction.predicted_delay_days %}{{ prediction.predicted_delay_days|floatformat:0 }} d{% else %}—{% endif %}</strong>
+            <span>Expected delay</span>
+          </div>
+          <div>
+            <strong>{{ prediction.estimated_completion_date|date:"d M Y"|default:"—" }}</strong>
+            <span>Estimated end</span>
+          </div>
+          <div>
+            <strong>{{ project.planned_end_date|date:"d M Y" }}</strong>
+            <span>Planned end</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h4 style="margin:0 0 10px;font-size:0.84rem;">Important contributing factors</h4>
+    {% if factors %}
+    <ul class="factor-list">
+      {% for factor in factors %}
+      <li>
+        <div>
+          <strong>{{ factor.factor_name }}</strong>
+          <small>{{ factor.description }}</small>
+        </div>
+        <b>{{ factor.impact|floatformat:3 }}</b>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="mini-note" style="margin-top:10px;">
+      Factor impact is the model's feature importance multiplied by the severity of the
+      project's current value. It explains the prediction but is not a causal claim.
+    </p>
+    {% else %}
+    <p class="mini-note">No factor attribution was stored for this prediction.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel span-5">
+    <div class="panel-head">
+      <div><h3>Project snapshot</h3><p>Inputs used for this model run.</p></div>
+      <span class="pill pill-{{ prediction.risk_level|lower }}">{{ prediction.risk_level }}</span>
+    </div>
+    <dl class="detail-list">
+      <div><dt>State</dt><dd>{{ project.state }}</dd></div>
+      <div><dt>District</dt><dd>{{ project.district }}</dd></div>
+      <div><dt>Project type</dt><dd>{{ project.project_type }}</dd></div>
+      <div><dt>Land area</dt><dd>{{ project.land_area_acres|floatformat:1 }} ac</dd></div>
+      <div><dt>Parcels</dt><dd>{{ project.acquired_land_parcels }} / {{ project.total_land_parcels }}</dd></div>
+      <div><dt>Compensation</dt><dd>{{ project.compensation_completion_percentage|floatformat:0 }}%</dd></div>
+      <div><dt>Ownership disputes</dt><dd>{{ project.ownership_disputes }}</dd></div>
+      <div><dt>Legal cases</dt><dd>{{ project.legal_case_count }}</dd></div>
+      <div><dt>Approval</dt><dd>{{ project.get_approval_status_display }}</dd></div>
+      <div><dt>Clearance</dt><dd>{{ project.get_environmental_clearance_status_display }}</dd></div>
+      <div><dt>Rehabilitation</dt><dd>{{ project.get_rehabilitation_status_display }}</dd></div>
+      <div><dt>Duration</dt><dd>{{ project.project_duration_months }} months</dd></div>
+    </dl>
+
+    <div class="divider"></div>
+    <h4 style="margin:0 0 10px;font-size:0.84rem;">Model information</h4>
+    <dl class="detail-list">
+      <div><dt>Algorithm</dt><dd>{{ prediction.model_version.algorithm|default:"—" }}</dd></div>
+      <div><dt>Version</dt><dd>{{ prediction.model_version.version|default:"—" }}</dd></div>
+      <div><dt>Training rows</dt><dd>{{ prediction.model_version.training_rows|default:"—" }}</dd></div>
+      <div><dt>Triggered by</dt><dd>{% if prediction.predicted_by %}{{ prediction.predicted_by.get_username }}{% else %}System{% endif %}</dd></div>
+    </dl>
+  </section>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-5">
+    <div class="panel-head">
+      <div><h3>Risk profile</h3><p>Deterministic scores for this project snapshot.</p></div>
+    </div>
+    <div class="risk-grid">
+      {% for item in risk_profile %}
+      <div class="risk-card {{ item.level|lower }}">
+        <div class="risk-top">
+          <span class="risk-name">{{ item.label }}</span>
+          <span class="pill pill-{{ item.level|lower }}">{{ item.level }}</span>
+        </div>
+        <div class="risk-score">{{ item.score|floatformat:0 }}<small>/100</small></div>
+        <div class="progress-track {% if item.level == 'High' %}danger{% elif item.level == 'Medium' %}warning{% else %}success{% endif %}">
+          <span style="width: {{ item.score }}%;"></span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="panel span-7">
+    <div class="panel-head">
+      <div>
+        <h3>Suggested preventive actions</h3>
+        <p>Generated by the system from the prediction factors. Mark a plan when the team acts on it.</p>
+      </div>
+      <a href="{% url 'predictions:mitigation_list' %}?project={{ project.pk }}">Manage plans {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
+    </div>
+    {% if plans %}
+    <div class="table-wrap">
+      <table class="data-table table-compact">
+        <thead>
+          <tr><th>Risk area</th><th>Suggested action</th><th>Priority</th><th>Status</th><th>Update</th></tr>
+        </thead>
+        <tbody>
+          {% for plan in plans %}
+          <tr>
+            <td class="nowrap">{{ plan.risk_area }}</td>
+            <td>{{ plan.description }}</td>
+            <td><span class="pill pill-{{ plan.priority|lower }}">{{ plan.priority }}</span></td>
+            <td><span class="pill pill-{{ plan.status|slugify }}">{{ plan.get_status_display }}</span></td>
+            <td>
+              <form method="post" action="{% url 'predictions:mitigation_update' plan.pk %}" class="select-inline">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <select name="status" aria-label="Update status for {{ plan.title }}">
+                  {% for value, label in plan.STATUS_CHOICES %}
+                  <option value="{{ value }}" {% if plan.status == value %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-soft">Save</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="mini-note">No mitigation plans are linked to this prediction.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

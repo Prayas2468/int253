@@ -11,19 +11,19 @@
     </div>
 
     <div class="auth-hero-body">
-      <h2>Every land record, <span>digitized</span> and verified.</h2>
-      <p>Sign in to read scanned Records of Rights with OCR, validate every field against statutory rules, and export audit-ready reports.</p>
+      <h2>Predict land acquisition <span>delays</span> before they happen.</h2>
+      <p>Sign in to run the machine-learning delay model, review risk analytics and monitor acquisition progress across projects.</p>
       <ul class="auth-hero-list">
-        <li><span class="tick">{% include 'partials/icon.html' with name='icon-ocr' %}</span> Tesseract OCR with per-field confidence</li>
-        <li><span class="tick">{% include 'partials/icon.html' with name='icon-shield' %}</span> Five-rule validation and duplicate detection</li>
-        <li><span class="tick">{% include 'partials/icon.html' with name='icon-map-pin' %}</span> State-level analytics on a live India map</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-sparkle' %}</span> Random Forest, Decision Tree and Logistic Regression compared</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-shield' %}</span> Six-area risk profile and explanation factors</li>
+        <li><span class="tick">{% include 'partials/icon.html' with name='icon-report' %}</span> CSV and PDF analytical exports</li>
       </ul>
     </div>
 
     <div class="auth-hero-stats">
-      <div><strong>99.2%</strong><span>Extraction accuracy</span></div>
-      <div><strong>15+</strong><span>States covered</span></div>
-      <div><strong>&lt; 60s</strong><span>Per record</span></div>
+      <div><strong>2,400</strong><span>Synthetic projects</span></div>
+      <div><strong>3</strong><span>ML algorithms</span></div>
+      <div><strong>6</strong><span>Risk areas</span></div>
     </div>
   </aside>
 
@@ -31,7 +31,7 @@
     <div class="auth-card glass">
       <span class="auth-eyebrow">{% include 'partials/icon.html' with name='icon-lock' %}Welcome back</span>
       <h1>Sign in to BhoomiAI</h1>
-      <p class="auth-sub">Access your document vault, validation queue and analytics.</p>
+      <p class="auth-sub">Access delay prediction, risk analytics and project monitoring.</p>
 
       {% if form.non_field_errors %}
       <div class="alert alert-error" role="alert">

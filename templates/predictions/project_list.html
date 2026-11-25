@@ -1,0 +1,141 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}Projects — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Project register</span>
+    <h1>Land acquisition projects</h1>
+    <p>{{ total_count }} project{{ total_count|pluralize }} matching the current filters. Search, filter and sort the register, then open a project for its prediction history.</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'predictions:project_create' %}" class="btn btn-primary btn-sm">
+      {% include 'partials/icon.html' with name='icon-plus' %}Add project
+    </a>
+    <a href="{% url 'reports:projects_csv' %}" class="btn btn-ghost btn-sm">
+      {% include 'partials/icon.html' with name='icon-download' %}CSV
+    </a>
+  </div>
+</div>
+
+<form method="get" class="table-toolbar">
+  <div class="form-field">
+    <label for="pl-q">Search</label>
+    <input class="form-input" id="pl-q" type="text" name="q" value="{{ filter_form.q.value|default:'' }}" placeholder="Project, district or ID">
+  </div>
+  <div class="form-field">
+    <label for="pl-state">State</label>
+    <select class="form-input" id="pl-state" name="state">
+      {% for value, label in filter_form.fields.state.choices %}
+      <option value="{{ value }}" {% if filter_form.state.value == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-field">
+    <label for="pl-status">Status</label>
+    <select class="form-input" id="pl-status" name="status">
+      {% for value, label in filter_form.fields.status.choices %}
+      <option value="{{ value }}" {% if filter_form.status.value == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-field">
+    <label for="pl-risk">Risk level</label>
+    <select class="form-input" id="pl-risk" name="risk">
+      {% for value, label in filter_form.fields.risk.choices %}
+      <option value="{{ value }}" {% if filter_form.risk.value == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-field">
+    <label for="pl-sort">Sort</label>
+    <select class="form-input" id="pl-sort" name="sort">
+      {% for value, label in filter_form.fields.sort.choices %}
+      <option value="{{ value }}" {% if filter_form.sort.value == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-filter' %}Apply</button>
+  <a href="{% url 'predictions:project_list' %}" class="btn btn-ghost btn-sm">Reset</a>
+</form>
+
+{% if projects %}
+<div class="table-wrap">
+  <table class="data-table table-compact">
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Location</th>
+        <th>Land area</th>
+        <th>Acquisition</th>
+        <th>Compensation</th>
+        <th>Risk level</th>
+        <th>Delay probability</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for project in projects %}
+      <tr>
+        <td>
+          <div class="cell-title">
+            <strong><a href="{% url 'predictions:project_detail' project.pk %}">{{ project.project_name|truncatechars:38 }}</a></strong>
+            <small>{{ project.project_id }} · {{ project.project_type }}</small>
+          </div>
+        </td>
+        <td class="nowrap">{{ project.district }}, {{ project.state }}</td>
+        <td class="nowrap">{{ project.land_area_acres|floatformat:0 }} ac</td>
+        <td>
+          <div class="progress-line">
+            <div class="progress-track"><span style="width: {{ project.acquisition_progress }}%;"></span></div>
+            <span class="progress-value">{{ project.acquisition_progress|floatformat:0 }}%</span>
+          </div>
+        </td>
+        <td>
+          <div class="progress-line">
+            <div class="progress-track success"><span style="width: {{ project.compensation_completion_percentage }}%;"></span></div>
+            <span class="progress-value">{{ project.compensation_completion_percentage|floatformat:0 }}%</span>
+          </div>
+        </td>
+        <td><span class="pill pill-{{ project.risk_level|lower }}">{{ project.risk_level }}</span></td>
+        <td class="nowrap">{% if project.latest_probability is not None %}{{ project.latest_probability|floatformat:3 }}{% else %}—{% endif %}</td>
+        <td class="nowrap"><span class="pill pill-neutral">{{ project.get_status_display }}</span></td>
+        <td>
+          <div class="table-actions">
+            <a href="{% url 'predictions:project_detail' project.pk %}" class="btn btn-soft btn-sm">View</a>
+            <a href="{% url 'predictions:project_edit' project.pk %}" class="btn btn-ghost btn-sm">Edit</a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="pagination" aria-label="Project pages">
+  {% if page_obj.has_previous %}
+  <a href="{% querystring page=page_obj.previous_page_number %}">Prev</a>
+  {% endif %}
+  <span class="is-current">{{ page_obj.number }}</span>
+  <span>of {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+  <a href="{% querystring page=page_obj.next_page_number %}">Next</a>
+  {% endif %}
+</nav>
+{% endif %}
+
+{% else %}
+<div class="panel empty-state">
+  <div class="empty-icon">{% include 'partials/icon.html' with name='icon-layers' %}</div>
+  <h3>No matching projects</h3>
+  <p>Adjust the filters, create a project manually, or import the synthetic dataset.</p>
+  <div class="page-actions" style="justify-content:center;">
+    <a href="{% url 'predictions:project_create' %}" class="btn btn-primary btn-sm">Add project</a>
+    <a href="{% url 'predictions:data_import' %}" class="btn btn-ghost btn-sm">Import data</a>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

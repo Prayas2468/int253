@@ -1,0 +1,190 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}Model Performance — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Machine learning · evaluation</span>
+    <h1>Model performance</h1>
+    <p>
+      Random Forest, Decision Tree and Logistic Regression are trained on the same
+      synthetic dataset and stratified split. The best ROC-AUC model is activated.
+      Metrics are read from <code>ml_artifacts/metrics.json</code>; nothing on this page is hardcoded.
+    </p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'reports:model_csv' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-download' %}CSV</a>
+    <a href="{% url 'reports:model_pdf' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-pdf' %}PDF</a>
+    {% if user.is_staff %}
+    <form method="post" action="{% url 'predictions:train_model' %}" data-loading>
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-refresh' %}Retrain model</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+{% if metrics %}
+<div class="stats-grid kpi-grid">
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">Selected algorithm</div><div class="stat-value" style="font-size:1.12rem;">{{ selected }}</div></div>
+      <span class="stat-thumb success">{% include 'partials/icon.html' with name='icon-sparkle' %}</span>
+    </div>
+    <div class="stat-foot">Highest ROC-AUC on the test split</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">ROC-AUC</div><div class="stat-value">{{ selected_metrics.roc_auc }}</div></div>
+      <span class="stat-thumb accent">{% include 'partials/icon.html' with name='icon-activity' %}</span>
+    </div>
+    <div class="stat-foot">Discrimination on unseen rows</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">F1 score</div><div class="stat-value">{{ selected_metrics.f1 }}</div></div>
+      <span class="stat-thumb gold">{% include 'partials/icon.html' with name='icon-validate' %}</span>
+    </div>
+    <div class="stat-foot">Balance of precision and recall</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">Dataset rows</div><div class="stat-value">{{ dataset.rows }}</div></div>
+      <span class="stat-thumb">{% include 'partials/icon.html' with name='icon-layers' %}</span>
+    </div>
+    <div class="stat-foot">{{ split.train_rows }} train · {{ split.test_rows }} test</div>
+  </article>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-7">
+    <div class="panel-head">
+      <div><h3>Algorithm comparison</h3><p>Identical preprocessing pipeline and stratified 80/20 split for every candidate.</p></div>
+      <span class="pill pill-neutral">{{ split.test_size|floatformat:2 }} test size</span>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table table-compact metric-table">
+        <thead>
+          <tr><th>Algorithm</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>ROC-AUC</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for name, values in algorithms.items %}
+          <tr>
+            <td><strong>{{ name }}</strong></td>
+            <td>{{ values.accuracy }}</td>
+            <td>{{ values.precision }}</td>
+            <td>{{ values.recall }}</td>
+            <td>{{ values.f1 }}</td>
+            <td>{{ values.roc_auc }}</td>
+            <td>{% if name == selected %}<span class="pill pill-success">Active</span>{% else %}<span class="pill pill-neutral">Compared</span>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="mini-note" style="margin-top:10px;">
+      Dataset delay rate {{ dataset.delay_rate }} · {{ dataset.delayed }} delayed and
+      {{ dataset.no_delay }} non-delayed rows · generated {{ metrics.generated_at|slice:":10" }}.
+    </p>
+  </section>
+
+  <section class="panel span-5">
+    <div class="panel-head">
+      <div><h3>Confusion matrices</h3><p>Rows are actual, columns are predicted (no delay, delay).</p></div>
+    </div>
+    {% for name, values in algorithms.items %}
+    <div style="margin-bottom:14px;">
+      <strong style="font-size:0.8rem;">{{ name }}</strong>
+      <div class="matrix-grid" style="margin-top:6px;">
+        <span class="matrix-head">TN</span><span class="matrix-head">FP</span>
+        <span class="matrix-hit">{{ values.confusion_matrix.0.0 }}</span><span class="matrix-miss">{{ values.confusion_matrix.0.1 }}</span>
+        <span class="matrix-head">FN</span><span class="matrix-head">TP</span>
+        <span class="matrix-miss">{{ values.confusion_matrix.1.0 }}</span><span class="matrix-hit">{{ values.confusion_matrix.1.1 }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>ROC curves</h3><p>True positive rate against false positive rate.</p></div>
+    </div>
+    <div class="chart-shell"><canvas id="rocChart" aria-label="ROC curves" role="img"></canvas></div>
+  </section>
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Feature importance</h3><p>Aggregated across encoded columns for the active model.</p></div>
+    </div>
+    <div class="chart-shell"><canvas id="importanceChart" aria-label="Feature importance" role="img"></canvas></div>
+  </section>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Delay-duration regressor</h3><p>Random Forest trained only on delayed projects.</p></div>
+      <span class="pill pill-neutral">Random Forest</span>
+    </div>
+    {% if regressor %}
+    <dl class="detail-list">
+      <div><dt>MAE</dt><dd>{{ regressor.mae }} days</dd></div>
+      <div><dt>RMSE</dt><dd>{{ regressor.rmse }} days</dd></div>
+      <div><dt>R²</dt><dd>{{ regressor.r2 }}</dd></div>
+      <div><dt>Training rows</dt><dd>{{ regressor.training_rows }}</dd></div>
+      <div><dt>Test rows</dt><dd>{{ regressor.test_rows }}</dd></div>
+    </dl>
+    <p class="mini-note" style="margin-top:10px;">
+      Duration is predicted only when the classifier's delay probability is at least 50%.
+      For low-risk projects the estimated delay stays at zero.
+    </p>
+    {% else %}
+    <p class="mini-note">No duration model is available.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Registered model versions</h3><p>Each training run stores its metrics with the pipeline.</p></div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table table-compact">
+        <thead><tr><th>Version</th><th>Algorithm</th><th>Rows</th><th>Trained</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for version in versions %}
+          <tr>
+            <td class="nowrap">{{ version.version }}</td>
+            <td class="nowrap">{{ version.algorithm }}</td>
+            <td>{{ version.training_rows }}</td>
+            <td class="nowrap">{{ version.trained_at|date:"d M Y H:i" }}</td>
+            <td>{% if version.is_active %}<span class="pill pill-success">Active</span>{% else %}<span class="pill pill-neutral">Archived</span>{% endif %}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5">No model versions registered yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="mini-note" style="margin-top:10px;">
+      Classifier artifact: <code>{{ summary.classifier_path }}</code><br>
+      Regressor artifact: <code>{{ summary.regressor_path|default:"not available" }}</code>
+    </p>
+  </section>
+</div>
+
+{{ analytics_data|json_script:"analytics-data" }}
+{% else %}
+<div class="panel empty-state">
+  <div class="empty-icon">{% include 'partials/icon.html' with name='icon-activity' %}</div>
+  <h3>No metrics available</h3>
+  <p>Generate the synthetic dataset and train the model to populate this page.</p>
+  <p class="mini-note"><code>python manage.py generate_synthetic_data</code><br><code>python manage.py train_delay_model</code></p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/analytics.js' %}?v=20261125a"></script>
+{% endblock %}

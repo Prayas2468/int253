@@ -1,0 +1,60 @@
+{% load static %}
+<aside class="app-sidebar" aria-label="Analytics navigation">
+  <a class="sidebar-brand" href="{% url 'dashboard:home' %}">
+    <img src="{% static 'images/logo-dark.svg' %}" alt="BhoomiAI" width="164" height="34">
+    <span>Predictive analytics</span>
+  </a>
+
+  <nav class="sidebar-nav">
+    <span class="sidebar-group">Workspace</span>
+    <a href="{% url 'dashboard:home' %}" class="{% if request.resolver_match.namespace == 'dashboard' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-dashboard' %}<span>Overview Dashboard</span>
+    </a>
+    <a href="{% url 'predictions:project_list' %}" class="{% if request.resolver_match.url_name == 'project_list' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-layers' %}<span>Projects</span>
+    </a>
+    <a href="{% url 'predictions:project_create' %}" class="{% if request.resolver_match.url_name == 'project_create' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-plus' %}<span>Add New Project</span>
+    </a>
+    <a href="{% url 'predictions:data_import' %}" class="{% if request.resolver_match.url_name == 'data_import' or request.resolver_match.url_name == 'csv_template' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-upload' %}<span>Data Import</span>
+    </a>
+
+    <span class="sidebar-group">Intelligence</span>
+    <a href="{% url 'predictions:predict' %}" class="{% if request.resolver_match.url_name == 'predict' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-sparkle' %}<span>Delay Prediction</span>
+    </a>
+    <a href="{% url 'predictions:risk_analytics' %}" class="{% if request.resolver_match.url_name == 'risk_analytics' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-shield' %}<span>Risk Analytics</span>
+    </a>
+    <a href="{% url 'predictions:monitoring' %}" class="{% if request.resolver_match.url_name == 'monitoring' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-map' %}<span>Project Monitoring</span>
+    </a>
+    <a href="{% url 'predictions:mitigation_list' %}" class="{% if request.resolver_match.url_name == 'mitigation_list' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-validate' %}<span>Mitigation Plans</span>
+    </a>
+    <a href="{% url 'predictions:model_performance' %}" class="{% if request.resolver_match.url_name == 'model_performance' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-activity' %}<span>Model Performance</span>
+    </a>
+    <a href="{% url 'predictions:prediction_history' %}" class="{% if request.resolver_match.url_name == 'prediction_history' or request.resolver_match.url_name == 'prediction_detail' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-clock' %}<span>Prediction History</span>
+    </a>
+
+    <span class="sidebar-group">System</span>
+    <a href="{% url 'reports:index' %}" class="{% if request.resolver_match.namespace == 'reports' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-report' %}<span>Reports</span>
+    </a>
+    <a href="{% url 'notifications:list' %}" class="{% if request.resolver_match.namespace == 'notifications' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-bell' %}<span>Notifications</span>
+      {% if unread_notifications %}<span class="sidebar-count">{{ unread_notifications }}</span>{% endif %}
+    </a>
+    <a href="{% url 'predictions:settings' %}" class="{% if request.resolver_match.url_name == 'settings' %}is-active{% endif %}">
+      {% include 'partials/icon.html' with name='icon-settings' %}<span>Settings</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-foot">
+    <span class="sidebar-badge">Synthetic data</span>
+    <p>Academic demonstration workspace. Predictions are model-generated, not legal or financial advice.</p>
+  </div>
+</aside>

@@ -1,0 +1,129 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}Mitigation Plans — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Preventive action register</span>
+    <h1>Mitigation plans</h1>
+    <p>{{ total_count }} plan{{ total_count|pluralize }} in the current view. Plans are suggested automatically from prediction factors; the status column records whether the team has acted.</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'reports:mitigation_csv' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-download' %}CSV</a>
+  </div>
+</div>
+
+<div class="stats-grid kpi-grid" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">Suggested</div><div class="stat-value">{{ counts.suggested }}</div></div>
+      <span class="stat-thumb gold">{% include 'partials/icon.html' with name='icon-sparkle' %}</span>
+    </div>
+    <div class="stat-foot">System-generated, not yet reviewed</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">Planned</div><div class="stat-value">{{ counts.planned }}</div></div>
+      <span class="stat-thumb accent">{% include 'partials/icon.html' with name='icon-layers' %}</span>
+    </div>
+    <div class="stat-foot">Accepted for action</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">In progress</div><div class="stat-value">{{ counts.in_progress }}</div></div>
+      <span class="stat-thumb">{% include 'partials/icon.html' with name='icon-clock' %}</span>
+    </div>
+    <div class="stat-foot">Being worked on</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">Completed</div><div class="stat-value">{{ counts.completed }}</div></div>
+      <span class="stat-thumb success">{% include 'partials/icon.html' with name='icon-check' %}</span>
+    </div>
+    <div class="stat-foot">Actioned by users</div>
+  </article>
+</div>
+
+<form method="get" class="table-toolbar">
+  <div class="form-field">
+    <label for="mp-status">Status</label>
+    <select class="form-input" id="mp-status" name="status">
+      <option value="">All statuses</option>
+      <option value="suggested" {% if status_filter == 'suggested' %}selected{% endif %}>Suggested</option>
+      <option value="planned" {% if status_filter == 'planned' %}selected{% endif %}>Planned</option>
+      <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+      <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-filter' %}Filter</button>
+  <a href="{% url 'predictions:mitigation_list' %}" class="btn btn-ghost btn-sm">Reset</a>
+</form>
+
+{% if plans %}
+<div class="table-wrap">
+  <table class="data-table table-compact">
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Risk area</th>
+        <th>Suggested action</th>
+        <th>Priority</th>
+        <th>Source</th>
+        <th>Status</th>
+        <th>Update</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for plan in plans %}
+      <tr>
+        <td>
+          <div class="cell-title">
+            <strong><a href="{% url 'predictions:project_detail' plan.project.pk %}">{{ plan.project.project_name|truncatechars:30 }}</a></strong>
+            <small>{{ plan.project.project_id }}</small>
+          </div>
+        </td>
+        <td class="nowrap">{{ plan.risk_area }}</td>
+        <td>
+          <strong style="font-size:0.8rem;">{{ plan.title }}</strong>
+          <div class="mini-note">{{ plan.description }}</div>
+        </td>
+        <td><span class="pill pill-{{ plan.priority|lower }}">{{ plan.priority }}</span></td>
+        <td class="nowrap">{% if plan.generated_by_system %}System suggested{% else %}User created{% endif %}</td>
+        <td><span class="pill pill-{{ plan.status|slugify }}">{{ plan.get_status_display }}</span></td>
+        <td>
+          <form method="post" action="{% url 'predictions:mitigation_update' plan.pk %}" class="select-inline">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <select name="status" aria-label="Status for {{ plan.title }}">
+              {% for value, label in plan.STATUS_CHOICES %}
+              <option value="{{ value }}" {% if plan.status == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-soft">Save</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="pagination" aria-label="Mitigation plan pages">
+  {% if page_obj.has_previous %}<a href="{% querystring page=page_obj.previous_page_number %}">Prev</a>{% endif %}
+  <span class="is-current">{{ page_obj.number }}</span>
+  <span>of {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a href="{% querystring page=page_obj.next_page_number %}">Next</a>{% endif %}
+</nav>
+{% endif %}
+
+{% else %}
+<div class="panel empty-state">
+  <div class="empty-icon">{% include 'partials/icon.html' with name='icon-validate' %}</div>
+  <h3>No mitigation plans</h3>
+  <p>Run a delay prediction to generate preventive actions from the contributing factors.</p>
+  <a href="{% url 'predictions:predict' %}" class="btn btn-primary btn-sm">Run a prediction</a>
+</div>
+{% endif %}
+{% endblock %}

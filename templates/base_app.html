@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main_class %}container app-container{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/predictive.css' %}?v=20261125a">
+{% block app_head %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<div class="app-shell">
+  {% include 'partials/app_sidebar.html' %}
+  <div class="app-content">
+    {% block app_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

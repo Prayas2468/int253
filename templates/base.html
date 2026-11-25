@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="BhoomiAI — intelligent land record digitization, OCR validation and predictive analytics.">
-  <title>{% block title %}BhoomiAI — Intelligent Land Records{% endblock %}</title>
+  <meta name="description" content="BhoomiAI — Predictive Analytics System for Early Detection of Land Acquisition Delays. Machine learning on synthetic project data, risk analytics and monitoring.">
+  <title>{% block title %}BhoomiAI — Land Acquisition Delay Prediction{% endblock %}</title>
   <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
   <script>
     (function () {
@@ -30,7 +30,7 @@
 
   {% include 'partials/header.html' %}
 
-  <main id="main" class="container">
+  <main id="main" class="{% block main_class %}container{% endblock %}">
     {% include 'partials/messages.html' %}
     {% block content %}{% endblock %}
   </main>

@@ -1,103 +1,154 @@
-{% extends 'base.html' %}
+{% extends 'base_app.html' %}
 {% load static %}
-{% block title %}Reports — BhoomiAI{% endblock %}
+{% block title %}Reports &amp; Exports — Bhoomiai Predictive Analytics{% endblock %}
 
-{% block content %}
-<div class="section-head" style="padding-top:34px;">
+{% block app_content %}
+<div class="page-head">
   <div>
-    <span class="eyebrow">Exports &amp; analytics</span>
-    <h1>Reports</h1>
-    <p>Download real records from your workspace as CSV, Excel or PDF.</p>
+    <span class="eyebrow">Reports &amp; exports</span>
+    <h1>Analytical reports</h1>
+    <p>
+      Download project registers, monitoring data, prediction history, risk analysis and
+      model evaluation. Every export is generated from the live database or the persisted
+      model metrics.
+    </p>
   </div>
-  <a href="{% url 'dashboard:home' %}" class="btn btn-ghost btn-sm">Back to dashboard</a>
+  <div class="page-actions">
+    <a href="{% url 'predictions:model_performance' %}" class="btn btn-ghost btn-sm">Model performance</a>
+  </div>
 </div>
 
-<div class="stats-grid">
+<div class="stats-grid kpi-grid">
   <article class="stat-card">
     <div class="stat-top">
-      <div><div class="stat-label">Documents</div><div class="stat-value">{{ total }}</div></div>
-      <span class="card-icon">{% include 'partials/icon.html' with name='icon-document' %}</span>
+      <div class="stat-main"><div class="stat-label">Projects</div><div class="stat-value">{{ total_projects }}</div></div>
+      <span class="stat-thumb">{% include 'partials/icon.html' with name='icon-layers' %}</span>
     </div>
-    <div class="stat-foot">Included in exports</div>
-  </article>
-  <article class="stat-card">
-    <div class="stat-top">
-      <div><div class="stat-label">Validated</div><div class="stat-value">{{ validated }}</div></div>
-      <span class="card-icon success">{% include 'partials/icon.html' with name='icon-check' %}</span>
-    </div>
-    <div class="stat-foot">{{ pending }} pending · {{ failed_docs }} failed</div>
+    <div class="stat-foot">{{ high_risk }} high · {{ medium_risk }} medium · {{ low_risk }} low risk</div>
   </article>
   <article class="stat-card">
     <div class="stat-top">
-      <div><div class="stat-label">Rule pass rate</div><div class="stat-value">{{ pass_rate }}%</div></div>
-      <span class="card-icon gold">{% include 'partials/icon.html' with name='icon-validate' %}</span>
+      <div class="stat-main"><div class="stat-label">Predictions</div><div class="stat-value">{{ prediction_count }}</div></div>
+      <span class="stat-thumb accent">{% include 'partials/icon.html' with name='icon-sparkle' %}</span>
     </div>
-    <div class="stat-foot">Across validation checks</div>
+    <div class="stat-foot">Stored model runs</div>
   </article>
   <article class="stat-card">
     <div class="stat-top">
-      <div><div class="stat-label">Avg confidence</div><div class="stat-value">{{ avg_confidence }}%</div></div>
-      <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-ocr' %}</span>
+      <div class="stat-main"><div class="stat-label">Mitigation plans</div><div class="stat-value">{{ mitigation_count }}</div></div>
+      <span class="stat-thumb gold">{% include 'partials/icon.html' with name='icon-validate' %}</span>
     </div>
-    <div class="stat-foot">OCR field quality</div>
+    <div class="stat-foot">System and user actions</div>
   </article>
-</div>
-
-<div class="report-grid" style="margin-bottom:30px;">
-  <article class="card card-hover report-card">
-    <span class="card-icon">{% include 'partials/icon.html' with name='icon-csv' %}</span>
-    <h3>CSV export</h3>
-    <p>Raw tabular data for spreadsheets and data pipelines.</p>
-    <div class="report-meta"><span class="pill">UTF-8</span><span class="pill">All fields</span></div>
-    <a href="{% url 'reports:csv' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}Download CSV</a>
-  </article>
-
-  <article class="card card-hover report-card">
-    <span class="card-icon success">{% include 'partials/icon.html' with name='icon-excel' %}</span>
-    <h3>Excel workbook</h3>
-    <p>Formatted .xlsx with frozen headers and column widths.</p>
-    <div class="report-meta"><span class="pill">XLSX</span><span class="pill">Styled</span></div>
-    {% if excel_available %}
-    <a href="{% url 'reports:excel' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}Download Excel</a>
-    {% else %}
-    <span class="pill pill-pending">openpyxl not installed</span>
-    {% endif %}
-  </article>
-
-  <article class="card card-hover report-card">
-    <span class="card-icon accent">{% include 'partials/icon.html' with name='icon-pdf' %}</span>
-    <h3>PDF report</h3>
-    <p>Print-ready landscape report with your records table.</p>
-    <div class="report-meta"><span class="pill">PDF</span><span class="pill">Landscape</span></div>
-    {% if pdf_available %}
-    <a href="{% url 'reports:pdf' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}Download PDF</a>
-    {% else %}
-    <span class="pill pill-pending">reportlab not installed</span>
-    {% endif %}
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">Active model ROC-AUC</div><div class="stat-value">{{ selected_metrics.roc_auc|default:"—" }}</div></div>
+      <span class="stat-thumb success">{% include 'partials/icon.html' with name='icon-activity' %}</span>
+    </div>
+    <div class="stat-foot">{{ selected_algorithm|default:"No trained model" }}</div>
   </article>
 </div>
 
-<section class="dashboard-panel">
+<div class="app-grid">
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Project register</h3><p>All project attributes, progress and latest risk level.</p></div>
+      <span class="pill pill-neutral">{{ total_projects }} rows</span>
+    </div>
+    <div class="page-actions">
+      <a href="{% url 'reports:projects_csv' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}CSV</a>
+      <a href="{% url 'reports:projects_pdf' %}" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-pdf' %}PDF</a>
+      <a href="{% url 'reports:excel' %}" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-excel' %}Excel</a>
+    </div>
+    <p class="mini-note" style="margin-top:10px;">
+      Project identity, land area, parcels, compensation, approval, clearance, legal cases and predicted risk.
+    </p>
+  </section>
+
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Project monitoring</h3><p>Progress-focused export for review meetings.</p></div>
+    </div>
+    <div class="page-actions">
+      <a href="{% url 'reports:monitoring_csv' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}CSV</a>
+      <a href="{% url 'reports:monitoring_pdf' %}" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-pdf' %}PDF</a>
+    </div>
+    <p class="mini-note" style="margin-top:10px;">
+      Actual versus planned acquisition, compensation completion and current monitoring status.
+    </p>
+  </section>
+
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Prediction history</h3><p>Audit trail of every stored model prediction.</p></div>
+    </div>
+    <div class="page-actions">
+      <a href="{% url 'reports:predictions_csv' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}CSV</a>
+      <a href="{% url 'reports:predictions_pdf' %}" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-pdf' %}PDF</a>
+    </div>
+    <p class="mini-note" style="margin-top:10px;">
+      Probability, risk band, predicted delay days, estimated completion and model version.
+    </p>
+  </section>
+
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Risk analysis</h3><p>State-level portfolio risk distribution.</p></div>
+    </div>
+    <div class="page-actions">
+      <a href="{% url 'reports:risk_csv' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}CSV</a>
+      <a href="{% url 'reports:risk_pdf' %}" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-pdf' %}PDF</a>
+    </div>
+    <p class="mini-note" style="margin-top:10px;">
+      High, medium and low risk counts with average delay probability per state.
+    </p>
+  </section>
+
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Model evaluation</h3><p>Real metrics for every trained candidate.</p></div>
+      <span class="pill pill-neutral">{{ model_versions }} version{{ model_versions|pluralize }}</span>
+    </div>
+    <div class="page-actions">
+      <a href="{% url 'reports:model_csv' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}CSV</a>
+      <a href="{% url 'reports:model_pdf' %}" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-pdf' %}PDF</a>
+    </div>
+    <p class="mini-note" style="margin-top:10px;">
+      Accuracy, precision, recall, F1, ROC-AUC and confusion-matrix counts from the persisted metrics file.
+    </p>
+  </section>
+
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Mitigation plan register</h3><p>Suggested and actioned preventive measures.</p></div>
+    </div>
+    <div class="page-actions">
+      <a href="{% url 'reports:mitigation_csv' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-download' %}CSV</a>
+    </div>
+    <p class="mini-note" style="margin-top:10px;">
+      Risk area, suggested action, priority, workflow status and whether the system or a user created it.
+    </p>
+  </section>
+</div>
+
+<section class="panel">
   <div class="panel-head">
-    <h3>Export preview</h3>
-    <span class="pill pill-neutral">{{ total }} record{{ total|pluralize }}</span>
+    <div><h3>Recent predictions</h3><p>Latest eight stored predictions included in the exports.</p></div>
+    <a href="{% url 'predictions:prediction_history' %}">Full history {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
   </div>
-  {% if recent_documents %}
+  {% if recent_predictions %}
   <div class="table-wrap">
-    <table class="data-table">
-      <thead>
-        <tr><th>ID</th><th>File</th><th>Survey</th><th>District</th><th>Status</th><th>Confidence</th><th>Uploaded</th></tr>
-      </thead>
+    <table class="data-table table-compact">
+      <thead><tr><th>Predicted at</th><th>Project</th><th>State</th><th>Probability</th><th>Risk</th><th>Delay days</th></tr></thead>
       <tbody>
-        {% for doc in recent_documents %}
+        {% for item in recent_predictions %}
         <tr>
-          <td>#{{ doc.pk }}</td>
-          <td>{{ doc.original_name|truncatechars:32 }}</td>
-          <td>{{ doc.survey_number|default:"—" }}</td>
-          <td>{{ doc.district|default:"—" }}</td>
-          <td><span class="pill pill-{{ doc.status }}">{{ doc.get_status_display }}</span></td>
-          <td>{{ doc.confidence|floatformat:1 }}%</td>
-          <td class="nowrap">{{ doc.uploaded_at|date:"d M Y" }}</td>
+          <td class="nowrap">{{ item.created_at|date:"d M Y, H:i" }}</td>
+          <td class="nowrap">{{ item.project.project_id }}</td>
+          <td class="nowrap">{{ item.project.state }}</td>
+          <td class="nowrap">{{ item.probability_percent }}%</td>
+          <td><span class="pill pill-{{ item.risk_level|lower }}">{{ item.risk_level }}</span></td>
+          <td class="nowrap">{% if item.predicted_delay_days %}{{ item.predicted_delay_days|floatformat:0 }}{% else %}—{% endif %}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -107,9 +158,14 @@
   <div class="empty-state">
     <div class="empty-icon">{% include 'partials/icon.html' with name='icon-report' %}</div>
     <h3>Nothing to export yet</h3>
-    <p>Upload and validate a document to populate your reports.</p>
-    <a href="{% url 'documents:upload' %}" class="btn btn-primary">Upload a document</a>
+    <p>Import the synthetic dataset or run a prediction to populate the reports.</p>
+    <a href="{% url 'predictions:data_import' %}" class="btn btn-primary btn-sm">Import data</a>
   </div>
   {% endif %}
+  <p class="mini-note" style="margin-top:12px;">
+    Generated {{ generated_at|date:"d M Y, H:i" }}.
+    {% if not pdf_available %}PDF export falls back to CSV because reportlab is unavailable.{% endif %}
+    {% if not excel_available %}Excel export falls back to CSV because openpyxl is unavailable.{% endif %}
+  </p>
 </section>
 {% endblock %}

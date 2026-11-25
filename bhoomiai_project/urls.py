@@ -13,6 +13,7 @@ urlpatterns = [
     path('duplicates/', include('duplicates.urls')),
     path('reports/', include('reports.urls')),
     path('notifications/', include('notifications.urls')),
+    path('analytics/', include('predictions.urls')),
 ]
 
 # THIS IS CRITICAL FOR CSS/IMAGES TO LOAD:

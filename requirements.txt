@@ -2,9 +2,11 @@ django>=4.2,<7.0
 djangorestframework>=3.14
 pillow
 pytesseract
-opencv-python
 pymupdf
-pandas
+pandas>=2.0
+numpy>=1.26
+scikit-learn>=1.4
+joblib>=1.3
 openpyxl
 reportlab
 pytest

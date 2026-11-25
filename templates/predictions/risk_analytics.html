@@ -1,0 +1,192 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}Risk Analytics — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Portfolio intelligence</span>
+    <h1>Risk analytics</h1>
+    <p>Delay-risk distribution, state and district exposure, compensation and approval bottlenecks, and the model's global feature importance — all computed from stored project and prediction records.</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'reports:risk_csv' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-download' %}CSV</a>
+    <a href="{% url 'reports:risk_pdf' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-pdf' %}PDF</a>
+  </div>
+</div>
+
+<div class="stats-grid kpi-grid">
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">Projects analysed</div><div class="stat-value">{{ total_projects }}</div></div>
+      <span class="stat-thumb">{% include 'partials/icon.html' with name='icon-layers' %}</span>
+    </div>
+    <div class="stat-foot">Latest prediction per project</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">High-risk projects</div><div class="stat-value">{{ high_risk }}</div></div>
+      <span class="stat-thumb danger">{% include 'partials/icon.html' with name='icon-alert' %}</span>
+    </div>
+    <div class="stat-foot">Probability ≥ 65%</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">Predicted delay rate</div><div class="stat-value">{{ delay_rate }}%</div></div>
+      <span class="stat-thumb gold">{% include 'partials/icon.html' with name='icon-trending' %}</span>
+    </div>
+    <div class="stat-foot">Model probability ≥ 50%</div>
+  </article>
+  <article class="stat-card">
+    <div class="stat-top">
+      <div class="stat-main"><div class="stat-label">Avg compensation</div><div class="stat-value">{{ avg_compensation }}%</div></div>
+      <span class="stat-thumb success">{% include 'partials/icon.html' with name='icon-validate' %}</span>
+    </div>
+    <div class="stat-foot">{{ low_risk }} low-risk · {{ medium_risk }} medium-risk</div>
+  </article>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-7">
+    <div class="panel-head">
+      <div><h3>State-wise risk analysis</h3><p>High, medium and low risk counts per state.</p></div>
+    </div>
+    <div class="chart-shell tall"><canvas id="stateRiskChart" aria-label="State-wise risk analysis" role="img"></canvas></div>
+  </section>
+  <section class="panel span-5">
+    <div class="panel-head">
+      <div><h3>Overall delay risk distribution</h3><p>Share of projects in each predicted risk band.</p></div>
+    </div>
+    <div class="chart-shell tall"><canvas id="riskChart" aria-label="Overall delay risk distribution" role="img"></canvas></div>
+  </section>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>District-wise project analysis</h3><p>Top districts by high-risk project count.</p></div>
+    </div>
+    <div class="chart-shell"><canvas id="districtChart" aria-label="District-wise project analysis" role="img"></canvas></div>
+  </section>
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Compensation completion analysis</h3><p>Delay rate by compensation completion band.</p></div>
+    </div>
+    <div class="chart-shell"><canvas id="compensationChart" aria-label="Compensation completion analysis" role="img"></canvas></div>
+  </section>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Approval bottleneck analysis</h3><p>Average predicted delay probability by approval status.</p></div>
+    </div>
+    <div class="chart-shell"><canvas id="approvalChart" aria-label="Approval bottleneck analysis" role="img"></canvas></div>
+  </section>
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Legal dispute analysis</h3><p>Predicted delay share by number of active legal cases.</p></div>
+    </div>
+    <div class="chart-shell"><canvas id="legalChart" aria-label="Legal dispute analysis" role="img"></canvas></div>
+  </section>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-7">
+    <div class="panel-head">
+      <div><h3>Monthly acquisition progress</h3><p>Average planned schedule against actual acquisition.</p></div>
+    </div>
+    <div class="chart-shell"><canvas id="progressChart" aria-label="Monthly acquisition progress" role="img"></canvas></div>
+    <div class="legend-row">
+      <span><i style="background: var(--primary);"></i>Planned</span>
+      <span><i style="background: var(--accent);"></i>Actual</span>
+    </div>
+  </section>
+  <section class="panel span-5">
+    <div class="panel-head">
+      <div><h3>Risk factor importance</h3><p>Global feature importance of the selected classifier.</p></div>
+    </div>
+    <div class="chart-shell"><canvas id="importanceChart" aria-label="Risk factor importance" role="img"></canvas></div>
+  </section>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Compensation bands</h3><p>Computed from stored project and prediction records.</p></div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table table-compact">
+        <thead><tr><th>Band</th><th>Projects</th><th>High risk</th><th>Delay rate</th></tr></thead>
+        <tbody>
+          {% for row in compensation_buckets %}
+          <tr>
+            <td class="nowrap">{{ row.label }}</td>
+            <td>{{ row.total }}</td>
+            <td>{{ row.high_risk }}</td>
+            <td class="nowrap">{{ row.delay_rate }}%</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4">No data.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Approval status breakdown</h3><p>Project counts and average delay probability.</p></div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table table-compact">
+        <thead><tr><th>Approval status</th><th>Projects</th><th>High risk</th><th>Avg probability</th></tr></thead>
+        <tbody>
+          {% for row in approval_analysis %}
+          <tr>
+            <td class="nowrap">{{ row.status }}</td>
+            <td>{{ row.total }}</td>
+            <td>{{ row.high_risk }}</td>
+            <td class="nowrap">{{ row.avg_probability }}%</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4">No data.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<section class="panel" style="margin-bottom:20px;">
+  <div class="panel-head">
+    <div><h3>State risk table</h3><p>Ordered by high-risk count, then average delay probability.</p></div>
+    <a href="{% url 'predictions:monitoring' %}">Open monitoring {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table table-compact">
+      <thead><tr><th>State</th><th>Projects</th><th>High</th><th>Medium</th><th>Low</th><th>Avg probability</th></tr></thead>
+      <tbody>
+        {% for row in state_risk %}
+        <tr>
+          <td class="nowrap">{{ row.state }}</td>
+          <td>{{ row.total }}</td>
+          <td><span class="pill pill-high">{{ row.high }}</span></td>
+          <td><span class="pill pill-medium">{{ row.medium }}</span></td>
+          <td><span class="pill pill-low">{{ row.low }}</span></td>
+          <td class="nowrap">{{ row.avg_probability }}%</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No state data available.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{{ analytics_data|json_script:"analytics-data" }}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/analytics.js' %}?v=20261125a"></script>
+{% endblock %}

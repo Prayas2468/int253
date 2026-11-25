@@ -1,0 +1,95 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}Prediction History — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Model audit trail</span>
+    <h1>Prediction history</h1>
+    <p>{{ total_count }} stored prediction{{ total_count|pluralize }}. Every model run keeps its probability, risk band, delay estimate and model version.</p>
+  </div>
+  <div class="page-actions">
+    <a href="{% url 'predictions:predict' %}" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-sparkle' %}New prediction</a>
+    <a href="{% url 'reports:predictions_csv' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-download' %}CSV</a>
+    <a href="{% url 'reports:predictions_pdf' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-pdf' %}PDF</a>
+  </div>
+</div>
+
+<form method="get" class="table-toolbar">
+  <div class="form-field">
+    <label for="ph-q">Search</label>
+    <input class="form-input" id="ph-q" type="text" name="q" value="{{ query }}" placeholder="Project, district or ID">
+  </div>
+  <div class="form-field">
+    <label for="ph-risk">Risk level</label>
+    <select class="form-input" id="ph-risk" name="risk">
+      <option value="">All risk levels</option>
+      <option value="High" {% if risk_filter == 'High' %}selected{% endif %}>High</option>
+      <option value="Medium" {% if risk_filter == 'Medium' %}selected{% endif %}>Medium</option>
+      <option value="Low" {% if risk_filter == 'Low' %}selected{% endif %}>Low</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-soft btn-sm">{% include 'partials/icon.html' with name='icon-filter' %}Filter</button>
+  <a href="{% url 'predictions:prediction_history' %}" class="btn btn-ghost btn-sm">Reset</a>
+</form>
+
+{% if predictions %}
+<div class="table-wrap">
+  <table class="data-table table-compact">
+    <thead>
+      <tr>
+        <th>Predicted at</th>
+        <th>Project</th>
+        <th>Location</th>
+        <th>Delay probability</th>
+        <th>Risk</th>
+        <th>Delay days</th>
+        <th>Estimated end</th>
+        <th>Model</th>
+        <th>Triggered by</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in predictions %}
+      <tr>
+        <td class="nowrap">{{ item.created_at|date:"d M Y, H:i" }}</td>
+        <td>
+          <div class="cell-title">
+            <strong><a href="{% url 'predictions:project_detail' item.project.pk %}">{{ item.project.project_name|truncatechars:32 }}</a></strong>
+            <small>{{ item.project.project_id }}</small>
+          </div>
+        </td>
+        <td class="nowrap">{{ item.project.district }}, {{ item.project.state }}</td>
+        <td class="nowrap">{{ item.probability_percent }}%</td>
+        <td><span class="pill pill-{{ item.risk_level|lower }}">{{ item.risk_level }}</span></td>
+        <td class="nowrap">{% if item.predicted_delay_days %}{{ item.predicted_delay_days|floatformat:0 }}{% else %}—{% endif %}</td>
+        <td class="nowrap">{{ item.estimated_completion_date|date:"d M Y"|default:"—" }}</td>
+        <td class="nowrap">{{ item.model_version.algorithm|default:"—" }}</td>
+        <td class="nowrap">{% if item.predicted_by %}{{ item.predicted_by.get_username }}{% else %}System{% endif %}</td>
+        <td><a href="{% url 'predictions:prediction_detail' item.pk %}" class="btn btn-ghost btn-sm">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="pagination" aria-label="Prediction history pages">
+  {% if page_obj.has_previous %}<a href="{% querystring page=page_obj.previous_page_number %}">Prev</a>{% endif %}
+  <span class="is-current">{{ page_obj.number }}</span>
+  <span>of {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a href="{% querystring page=page_obj.next_page_number %}">Next</a>{% endif %}
+</nav>
+{% endif %}
+
+{% else %}
+<div class="panel empty-state">
+  <div class="empty-icon">{% include 'partials/icon.html' with name='icon-clock' %}</div>
+  <h3>No predictions found</h3>
+  <p>Adjust the filters or run a new delay prediction.</p>
+  <a href="{% url 'predictions:predict' %}" class="btn btn-primary btn-sm">Run a prediction</a>
+</div>
+{% endif %}
+{% endblock %}

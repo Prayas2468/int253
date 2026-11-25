@@ -1,0 +1,233 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}{{ project.project_id }} — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Project register · {{ project.project_id }}</span>
+    <h1>{{ project.project_name }}</h1>
+    <p>
+      {{ project.project_type }} in {{ project.district }}, {{ project.state }}.
+      Current lifecycle phase: <strong>{{ phase }}</strong>.
+      {% if project.is_synthetic %}<span class="pill pill-neutral">Synthetic record</span>{% endif %}
+      {% if project.archived %}<span class="pill pill-pending">Archived</span>{% endif %}
+    </p>
+  </div>
+  <div class="page-actions">
+    <form method="post" action="{% url 'predictions:project_predict' project.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary btn-sm">{% include 'partials/icon.html' with name='icon-sparkle' %}Run prediction</button>
+    </form>
+    <a href="{% url 'predictions:project_edit' project.pk %}" class="btn btn-ghost btn-sm">Edit</a>
+    <form method="post" action="{% url 'predictions:project_archive' project.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-ghost btn-sm">{% if project.archived %}Restore{% else %}Archive{% endif %}</button>
+    </form>
+    <a href="{% url 'predictions:project_delete' project.pk %}" class="btn btn-ghost btn-sm">Delete</a>
+  </div>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-7">
+    <div class="panel-head">
+      <div><h3>Acquisition progress</h3><p>Actual parcel acquisition against the planned schedule for the elapsed months.</p></div>
+      <span class="pill pill-neutral">{{ project.get_status_display }}</span>
+    </div>
+
+    <div class="progress-line" style="margin-bottom:10px;">
+      <div class="progress-track"><span style="width: {{ project.acquisition_progress }}%;"></span></div>
+      <span class="progress-value">{{ project.acquisition_progress }}%</span>
+    </div>
+    <p class="mini-note">Actual acquisition: {{ project.acquired_land_parcels }} of {{ project.total_land_parcels }} parcels.</p>
+
+    <div class="progress-line" style="margin-bottom:10px;">
+      <div class="progress-track warning"><span style="width: {{ project.planned_progress }}%;"></span></div>
+      <span class="progress-value">{{ project.planned_progress }}%</span>
+    </div>
+    <p class="mini-note">Planned progress: {{ project.elapsed_months }} of {{ project.project_duration_months }} months elapsed.</p>
+
+    <div class="progress-line" style="margin-bottom:10px;">
+      <div class="progress-track success"><span style="width: {{ project.compensation_completion_percentage }}%;"></span></div>
+      <span class="progress-value">{{ project.compensation_completion_percentage }}%</span>
+    </div>
+    <p class="mini-note">Compensation completion: {{ project.get_compensation_status_display }}.</p>
+
+    <div class="divider"></div>
+
+    <h4 style="margin:0 0 10px;font-size:0.82rem;">Project details</h4>
+    <dl class="detail-list">
+      <div><dt>State</dt><dd>{{ project.state }}</dd></div>
+      <div><dt>District</dt><dd>{{ project.district }}</dd></div>
+      <div><dt>Land area</dt><dd>{{ project.land_area_acres|floatformat:1 }} acres</dd></div>
+      <div><dt>Parcels</dt><dd>{{ project.acquired_land_parcels }} / {{ project.total_land_parcels }}</dd></div>
+      <div><dt>Ownership disputes</dt><dd>{{ project.ownership_disputes }}</dd></div>
+      <div><dt>Legal cases</dt><dd>{{ project.legal_case_count }}</dd></div>
+      <div><dt>Approval</dt><dd>{{ project.get_approval_status_display }}</dd></div>
+      <div><dt>Clearance</dt><dd>{{ project.get_environmental_clearance_status_display }}</dd></div>
+      <div><dt>Rehabilitation</dt><dd>{{ project.get_rehabilitation_status_display }}</dd></div>
+      <div><dt>Stakeholder issues</dt><dd>{{ project.stakeholder_issues }}</dd></div>
+      <div><dt>Budget</dt><dd>{{ project.project_budget|floatformat:1 }} Cr</dd></div>
+      <div><dt>Allocated</dt><dd>{{ project.allocated_budget|floatformat:1 }} Cr</dd></div>
+      <div><dt>Start date</dt><dd>{{ project.start_date|date:"d M Y" }}</dd></div>
+      <div><dt>Planned end</dt><dd>{{ project.planned_end_date|date:"d M Y" }}</dd></div>
+    </dl>
+  </section>
+
+  <section class="panel span-5">
+    <div class="panel-head">
+      <div><h3>Latest prediction</h3><p>{{ project.predictions.count }} stored prediction{{ project.predictions.count|pluralize }}.</p></div>
+      {% if prediction %}<span class="pill pill-{{ prediction.risk_level|lower }}">{{ prediction.risk_level }}</span>{% endif %}
+    </div>
+
+    {% if prediction %}
+    <div class="end-banner">
+      <div>
+        <span>Delay probability</span>
+        <strong>{{ prediction.probability_percent }}%</strong>
+        <span>{{ prediction.predicted_outcome }} · {{ prediction.risk_level }} risk</span>
+      </div>
+      <span class="end-icon">{% include 'partials/icon.html' with name='icon-sparkle' %}</span>
+    </div>
+
+    <div class="result-facts">
+      <div>
+        <strong>{{ prediction.estimated_completion_date|date:"d M Y"|default:"—" }}</strong>
+        <span>Estimated end</span>
+      </div>
+      <div>
+        <strong>{% if prediction.predicted_delay_days %}{{ prediction.predicted_delay_days|floatformat:0 }} d{% else %}—{% endif %}</strong>
+        <span>Expected delay</span>
+      </div>
+      <div>
+        <strong>{{ prediction.created_at|date:"d M H:i" }}</strong>
+        <span>Predicted at</span>
+      </div>
+    </div>
+
+    <p class="mini-note" style="margin-top:12px;">
+      {% if prediction.model_version %}
+      Model: {{ prediction.model_version.name }} ({{ prediction.model_version.version }}).
+      {% else %}
+      Model version was not recorded for this prediction.
+      {% endif %}
+      {% if prediction.predicted_by %}Triggered by {{ prediction.predicted_by.get_username }}.{% endif %}
+    </p>
+
+    <div class="divider"></div>
+    <h4 style="margin:0 0 10px;font-size:0.82rem;">Contributing factors</h4>
+    {% if factors %}
+    <ul class="factor-list">
+      {% for factor in factors %}
+      <li>
+        <div>
+          <strong>{{ factor.factor_name }}</strong>
+          <small>{{ factor.description }}</small>
+        </div>
+        <b>{{ factor.impact|floatformat:3 }}</b>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="mini-note">No factor attribution was stored for this prediction.</p>
+    {% endif %}
+
+    <a href="{% url 'predictions:prediction_detail' prediction.pk %}" class="btn btn-soft btn-sm" style="margin-top:14px;">Open full prediction</a>
+    {% else %}
+    <div class="empty-state" style="padding:26px 12px;">
+      <div class="empty-icon">{% include 'partials/icon.html' with name='icon-sparkle' %}</div>
+      <h3>No prediction stored</h3>
+      <p>Run the active model to calculate delay probability, contributing factors and mitigation suggestions.</p>
+      <form method="post" action="{% url 'predictions:project_predict' project.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-sm">Predict delay</button>
+      </form>
+    </div>
+    {% endif %}
+  </section>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-5">
+    <div class="panel-head">
+      <div><h3>Risk profile</h3><p>Rule-based scores from the current project snapshot.</p></div>
+    </div>
+    <div class="risk-grid">
+      {% for item in risk_profile %}
+      <div class="risk-card {{ item.level|lower }}">
+        <div class="risk-top">
+          <span class="risk-name">{{ item.label }}</span>
+          <span class="pill pill-{{ item.level|lower }}">{{ item.level }}</span>
+        </div>
+        <div class="risk-score">{{ item.score|floatformat:0 }}<small>/100</small></div>
+        <div class="progress-track {% if item.level == 'High' %}danger{% elif item.level == 'Medium' %}warning{% else %}success{% endif %}">
+          <span style="width: {{ item.score }}%;"></span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="panel span-7">
+    <div class="panel-head">
+      <div><h3>Prediction history</h3><p>Most recent model runs for this project.</p></div>
+      <a href="{% url 'predictions:prediction_history' %}?q={{ project.project_id }}">Full history {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
+    </div>
+    {% if history %}
+    <div class="table-wrap">
+      <table class="data-table table-compact">
+        <thead>
+          <tr><th>Predicted</th><th>Probability</th><th>Risk</th><th>Delay days</th><th>Model</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for item in history %}
+          <tr>
+            <td class="nowrap">{{ item.created_at|date:"d M Y, H:i" }}</td>
+            <td class="nowrap">{{ item.probability_percent }}%</td>
+            <td><span class="pill pill-{{ item.risk_level|lower }}">{{ item.risk_level }}</span></td>
+            <td class="nowrap">{% if item.predicted_delay_days %}{{ item.predicted_delay_days|floatformat:0 }}{% else %}—{% endif %}</td>
+            <td class="nowrap">{{ item.model_version.algorithm|default:"—" }}</td>
+            <td><a href="{% url 'predictions:prediction_detail' item.pk %}" class="btn btn-ghost btn-sm">View</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="mini-note">No stored predictions yet.</p>
+    {% endif %}
+  </section>
+</div>
+
+<section class="panel" style="margin-bottom:20px;">
+  <div class="panel-head">
+    <div>
+      <h3>Mitigation plans</h3>
+      <p>System-generated suggestions based on the strongest contributing factors. Status is set by users.</p>
+    </div>
+    <a href="{% url 'predictions:mitigation_list' %}?project={{ project.pk }}">All plans {% include 'partials/icon.html' with name='icon-arrow-right' %}</a>
+  </div>
+  {% if plans %}
+  <div class="table-wrap">
+    <table class="data-table table-compact">
+      <thead>
+        <tr><th>Risk area</th><th>Suggested action</th><th>Priority</th><th>Status</th><th>Source</th></tr>
+      </thead>
+      <tbody>
+        {% for plan in plans %}
+        <tr>
+          <td class="nowrap">{{ plan.risk_area }}</td>
+          <td>{{ plan.description }}</td>
+          <td><span class="pill pill-{{ plan.priority|lower }}">{{ plan.priority }}</span></td>
+          <td><span class="pill pill-{{ plan.status|slugify }}">{{ plan.get_status_display }}</span></td>
+          <td class="nowrap">{% if plan.generated_by_system %}System suggested{% else %}User created{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="mini-note">No mitigation plans have been generated for this project.</p>
+  {% endif %}
+</section>
+{% endblock %}

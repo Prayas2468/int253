@@ -1,0 +1,97 @@
+{% extends 'base_app.html' %}
+{% load static %}
+{% block title %}Settings — BhoomiAI Predictive Analytics{% endblock %}
+
+{% block app_content %}
+<div class="page-head">
+  <div>
+    <span class="eyebrow">Workspace configuration</span>
+    <h1>Settings</h1>
+    <p>Theme preference, model thresholds and recent workspace activity.</p>
+  </div>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Appearance</h3><p>Theme is stored per user account and applied on every page.</p></div>
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-field">
+        <label for="theme_preference">Theme preference</label>
+        <select class="form-input" id="theme_preference" name="theme_preference">
+          <option value="light" {% if user.theme_preference == 'light' %}selected{% endif %}>Light</option>
+          <option value="dark" {% if user.theme_preference == 'dark' %}selected{% endif %}>Dark</option>
+        </select>
+        <span class="form-help">The header toggle also switches the theme immediately in this browser.</span>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save preference</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Prediction thresholds</h3><p>Fixed risk bands used to label model probabilities.</p></div>
+    </div>
+    <dl class="detail-list">
+      <div><dt>Low risk</dt><dd>below {{ thresholds.low|floatformat:2 }}</dd></div>
+      <div><dt>Medium risk</dt><dd>{{ thresholds.low|floatformat:2 }} – {{ thresholds.high|floatformat:2 }}</dd></div>
+      <div><dt>High risk</dt><dd>{{ thresholds.high|floatformat:2 }} and above</dd></div>
+      <div><dt>Delay outcome</dt><dd>probability ≥ 0.50</dd></div>
+    </dl>
+    <p class="mini-note" style="margin-top:10px;">
+      Thresholds are part of the configured risk policy and are applied consistently to
+      stored predictions, dashboards and exports.
+    </p>
+  </section>
+</div>
+
+<div class="app-grid">
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Active model</h3><p>Pipeline used for new predictions.</p></div>
+      {% if model_ready %}<span class="pill pill-success">Artifacts present</span>{% else %}<span class="pill pill-pending">Artifacts missing</span>{% endif %}
+    </div>
+    {% if active_model %}
+    <dl class="detail-list">
+      <div><dt>Name</dt><dd>{{ active_model.name }}</dd></div>
+      <div><dt>Algorithm</dt><dd>{{ active_model.algorithm }}</dd></div>
+      <div><dt>Version</dt><dd>{{ active_model.version }}</dd></div>
+      <div><dt>Training rows</dt><dd>{{ active_model.training_rows }}</dd></div>
+      <div><dt>Trained at</dt><dd>{{ active_model.trained_at|date:"d M Y, H:i" }}</dd></div>
+    </dl>
+    <p class="mini-note" style="margin-top:10px;">{{ active_model.notes }}</p>
+    {% else %}
+    <p class="mini-note">No active model version. Train the model from the Model Performance page.</p>
+    {% endif %}
+    <div class="divider"></div>
+    <h4 style="margin:0 0 8px;font-size:0.82rem;">Synthetic dataset</h4>
+    <p class="mini-note" style="overflow-wrap:anywhere;"><code>{{ dataset_path }}</code></p>
+  </section>
+
+  <section class="panel span-6">
+    <div class="panel-head">
+      <div><h3>Recent activity</h3><p>Audit trail for imports, predictions and mitigation updates.</p></div>
+    </div>
+    {% if recent_activity %}
+    <ul class="activity-list">
+      {% for entry in recent_activity %}
+      <li>
+        <i></i>
+        <div>
+          <strong>{{ entry.get_action_display|default:entry.action }}</strong>
+          <div class="mini-note">{{ entry.detail|default:"—" }}</div>
+        </div>
+        <small>{{ entry.created_at|date:"d M H:i" }}</small>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="mini-note">No recorded activity yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -11,11 +11,14 @@
         <a href="{% url 'dashboard:home' %}" class="{% if request.resolver_match.namespace == 'dashboard' %}is-active{% endif %}">
             {% include 'partials/icon.html' with name='icon-dashboard' %}Dashboard
         </a>
-        <a href="{% url 'documents:list' %}" class="{% if request.resolver_match.namespace == 'documents' %}is-active{% endif %}">
-            {% include 'partials/icon.html' with name='icon-document' %}Documents
+        <a href="{% url 'predictions:project_list' %}" class="{% if request.resolver_match.namespace == 'predictions' %}is-active{% endif %}">
+            {% include 'partials/icon.html' with name='icon-layers' %}Projects
         </a>
-        <a href="{% url 'validation:list' %}" class="{% if request.resolver_match.namespace == 'validation' %}is-active{% endif %}">
-            {% include 'partials/icon.html' with name='icon-validate' %}Validation
+        <a href="{% url 'predictions:predict' %}" class="{% if request.resolver_match.url_name == 'predict' %}is-active{% endif %}">
+            {% include 'partials/icon.html' with name='icon-sparkle' %}Predict
+        </a>
+        <a href="{% url 'predictions:risk_analytics' %}" class="{% if request.resolver_match.url_name == 'risk_analytics' %}is-active{% endif %}">
+            {% include 'partials/icon.html' with name='icon-shield' %}Risk analytics
         </a>
         <a href="{% url 'reports:index' %}" class="{% if request.resolver_match.namespace == 'reports' %}is-active{% endif %}">
             {% include 'partials/icon.html' with name='icon-report' %}Reports
@@ -47,6 +50,7 @@
                 </div>
                 <a href="{% url 'accounts:profile' %}">{% include 'partials/icon.html' with name='icon-user' %}My profile</a>
                 <a href="{% url 'dashboard:home' %}">{% include 'partials/icon.html' with name='icon-dashboard' %}Dashboard</a>
+                <a href="{% url 'predictions:data_import' %}">{% include 'partials/icon.html' with name='icon-upload' %}Data import</a>
                 <a href="{% url 'notifications:list' %}">{% include 'partials/icon.html' with name='icon-bell' %}Notifications</a>
                 <form method="post" action="{% url 'accounts:logout' %}">
                     {% csrf_token %}
@@ -75,11 +79,18 @@
     </div>
     <a href="{% url 'core:home' %}">{% include 'partials/icon.html' with name='icon-home' %}Home</a>
     <a href="{% url 'dashboard:home' %}">{% include 'partials/icon.html' with name='icon-dashboard' %}Dashboard</a>
-    <a href="{% url 'documents:list' %}">{% include 'partials/icon.html' with name='icon-document' %}Documents</a>
-    <a href="{% url 'validation:list' %}">{% include 'partials/icon.html' with name='icon-validate' %}Validation</a>
-    <a href="{% url 'duplicates:list' %}">{% include 'partials/icon.html' with name='icon-duplicate' %}Duplicates</a>
+    <a href="{% url 'predictions:project_list' %}">{% include 'partials/icon.html' with name='icon-layers' %}Projects</a>
+    <a href="{% url 'predictions:project_create' %}">{% include 'partials/icon.html' with name='icon-plus' %}Add project</a>
+    <a href="{% url 'predictions:data_import' %}">{% include 'partials/icon.html' with name='icon-upload' %}Data import</a>
+    <a href="{% url 'predictions:predict' %}">{% include 'partials/icon.html' with name='icon-sparkle' %}Delay prediction</a>
+    <a href="{% url 'predictions:risk_analytics' %}">{% include 'partials/icon.html' with name='icon-shield' %}Risk analytics</a>
+    <a href="{% url 'predictions:monitoring' %}">{% include 'partials/icon.html' with name='icon-map' %}Project monitoring</a>
+    <a href="{% url 'predictions:mitigation_list' %}">{% include 'partials/icon.html' with name='icon-validate' %}Mitigation plans</a>
+    <a href="{% url 'predictions:model_performance' %}">{% include 'partials/icon.html' with name='icon-activity' %}Model performance</a>
+    <a href="{% url 'predictions:prediction_history' %}">{% include 'partials/icon.html' with name='icon-clock' %}Prediction history</a>
     <a href="{% url 'reports:index' %}">{% include 'partials/icon.html' with name='icon-report' %}Reports</a>
     <a href="{% url 'notifications:list' %}">{% include 'partials/icon.html' with name='icon-bell' %}Notifications</a>
+    <a href="{% url 'predictions:settings' %}">{% include 'partials/icon.html' with name='icon-settings' %}Settings</a>
     <div class="mobile-divider"></div>
     {% if user.is_authenticated %}
     <a href="{% url 'accounts:profile' %}">{% include 'partials/icon.html' with name='icon-user' %}My profile</a>
