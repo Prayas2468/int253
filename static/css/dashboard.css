@@ -91,7 +91,7 @@
 
 /* Glowing state bubbles for document volume. */
 .glow-marker {
-    filter: drop-shadow(0 0 5px rgba(47, 143, 107, 0.85)) drop-shadow(0 0 12px rgba(31, 111, 84, 0.5));
+    filter: drop-shadow(0 0 5px rgba(217, 119, 54, 0.85)) drop-shadow(0 0 12px rgba(74, 37, 34, 0.5));
     animation: markerPulse 3.4s ease-in-out infinite;
 }
 
@@ -254,7 +254,7 @@
     background: var(--primary-soft);
 }
 
-[data-theme="dark"] .leaflet-container { background: #0B1220; }
+[data-theme="dark"] .leaflet-container { background: #1A1210; }
 [data-theme="dark"] .leaflet-control-attribution {
     background: rgba(5, 11, 20, 0.72) !important;
     border-radius: 6px 0 0 0;

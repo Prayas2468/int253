@@ -34,14 +34,14 @@
 
     function palette() {
         return {
-            primary: cssVar('--primary', '#1F6F54'),
-            accent: cssVar('--accent', '#2F8F6B'),
+            primary: cssVar('--primary', '#4A2522'),
+            accent: cssVar('--accent', '#D97736'),
             success: cssVar('--success', '#10B981'),
             warning: cssVar('--warning', '#F59E0B'),
-            info: cssVar('--info', '#1F6F54'),
-            text: cssVar('--text', '#0F172A'),
-            muted: cssVar('--muted', '#64748B'),
-            border: cssVar('--border', 'rgba(15,23,42,.1)'),
+            info: cssVar('--info', '#4A2522'),
+            text: cssVar('--text', '#252A27'),
+            muted: cssVar('--muted', '#6B726B'),
+            border: cssVar('--border', 'rgba(37,42,39,.1)'),
             card: cssVar('--card', '#FFFFFF')
         };
     }
@@ -135,9 +135,9 @@
 
     function mapColors() {
         return {
-            primary: cssVar('--primary', '#1F6F54'),
-            primarySoft: cssVar('--primary-soft', 'rgba(59,130,246,.16)'),
-            accent: cssVar('--accent', '#2F8F6B'),
+            primary: cssVar('--primary', '#4A2522'),
+            primarySoft: cssVar('--primary-soft', 'rgba(217,119,54,.16)'),
+            accent: cssVar('--accent', '#D97736'),
             dark: document.documentElement.getAttribute('data-theme') === 'dark'
         };
     }

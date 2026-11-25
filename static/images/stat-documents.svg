@@ -1,16 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="Land document stack">
   <defs>
     <linearGradient id="sdBlue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4A8BDB"/><stop offset="1" stop-color="#2457A6"/>
+      <stop offset="0" stop-color="#D97736"/><stop offset="1" stop-color="#8B5A2B"/>
     </linearGradient>
     <linearGradient id="sdGreen" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#8FD6B4"/><stop offset="1" stop-color="#2F8C66"/>
     </linearGradient>
   </defs>
-  <rect x="10" y="10" width="60" height="74" rx="10" fill="#DCEAF9"/>
-  <rect x="16" y="6" width="60" height="74" rx="10" fill="#FFFFFF" stroke="#BFD4EA" stroke-width="2"/>
-  <rect x="16" y="6" width="60" height="12" rx="6" fill="#E8F1FB"/>
-  <g fill="#C8D8EA">
+  <rect x="10" y="10" width="60" height="74" rx="10" fill="#FBEADF"/>
+  <rect x="16" y="6" width="60" height="74" rx="10" fill="#FFFFFF" stroke="#F5E4DA" stroke-width="2"/>
+  <rect x="16" y="6" width="60" height="12" rx="6" fill="#FDF4ED"/>
+  <g fill="#EADCD2">
     <rect x="24" y="26" width="32" height="4" rx="2"/>
     <rect x="24" y="35" width="42" height="3" rx="1.5"/>
     <rect x="24" y="43" width="36" height="3" rx="1.5"/>
@@ -22,7 +22,7 @@
     <circle cx="12" cy="12" r="4.5" fill="#FFFFFF"/>
     <circle cx="12" cy="12" r="2" fill="#E94B5A"/>
   </g>
-  <rect x="20" y="78" width="34" height="5" rx="2.5" fill="#BBD0E6"/>
+  <rect x="20" y="78" width="34" height="5" rx="2.5" fill="#F0DDD1"/>
   <circle cx="78" cy="20" r="10" fill="url(#sdBlue)"/>
   <path d="M78 14v12M72 20h12" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
 </svg>

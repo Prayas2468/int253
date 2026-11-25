@@ -17,17 +17,17 @@
     function palette() {
         var dark = document.documentElement.getAttribute('data-theme') === 'dark';
         return {
-            primary: cssVar('--primary', '#1F6F54'),
-            primaryStrong: cssVar('--primary-strong', '#14532D'),
-            accent: cssVar('--accent', '#2F8F6B'),
+            primary: cssVar('--primary', '#4A2522'),
+            primaryStrong: cssVar('--primary-strong', '#4A2522'),
+            accent: cssVar('--accent', '#D97736'),
             success: cssVar('--success', '#10B981'),
             warning: cssVar('--warning', '#F59E0B'),
             danger: cssVar('--danger', '#EF4444'),
-            text: cssVar('--text', '#0F172A'),
-            muted: cssVar('--muted', '#64748B'),
-            border: cssVar('--border', 'rgba(15,23,42,.1)'),
+            text: cssVar('--text', '#252A27'),
+            muted: cssVar('--muted', '#6B726B'),
+            border: cssVar('--border', 'rgba(37,42,39,.1)'),
             card: cssVar('--card', '#FFFFFF'),
-            soft: cssVar('--card-2', '#F1F5F9'),
+            soft: cssVar('--card-2', '#FFE5D9'),
             dark: dark
         };
     }

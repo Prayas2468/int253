@@ -73,10 +73,10 @@ def _render_record(record):
     image = Image.new('RGB', (width, height), '#F8F5EC')
     draw = ImageDraw.Draw(image)
 
-    draw.rectangle([0, 0, width, 14], fill='#17365D')
+    draw.rectangle([0, 0, width, 14], fill='#4A2522')
     draw.rectangle([40, 40, width - 40, height - 40], outline='#B9AE93', width=3)
-    draw.text((60, 70), 'RECORD OF RIGHTS', font=_font(38, True), fill='#17365D')
-    draw.text((60, 122), 'Government of India  |  Land Records Department', font=_font(18), fill='#5B6B80')
+    draw.text((60, 70), 'RECORD OF RIGHTS', font=_font(38, True), fill='#4A2522')
+    draw.text((60, 122), 'Government of India  |  Land Records Department', font=_font(18), fill='#6B726B')
     draw.line([60, 160, width - 60, 160], fill='#B9AE93', width=2)
 
     rows = [

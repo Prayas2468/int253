@@ -1,280 +1,323 @@
-# Predictive Analytics System for Early Detection of Land Acquisition Delays
+<div align="center">
 
-**Category:** Smart Automation  
-**Brand / Product:** BhoomiAI  
-**Status:** Working academic prototype (synthetic data)
+# 🏛️ BhoomiAI
 
-An intelligent predictive analytics platform that uses Machine Learning on synthetic
-land acquisition project data to identify potential delays, analyse risk factors,
-monitor project progress and support preventive decision-making through an
-interactive dashboard.
+### Predictive Analytics for Early Detection of Land Acquisition Delays
+
+An intelligent **Django + Machine Learning** platform that predicts land-acquisition delays, uncovers the risk factors behind them, and helps programme managers intervene **before** a delay becomes unavoidable — presented through a premium, interactive analytics dashboard.
+
+<br>
+
+![Python](https://img.shields.io/badge/Python-3.12-D97736?style=for-the-badge&logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-6.1-4A2522?style=for-the-badge&logo=django&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-8B5A2B?style=for-the-badge&logo=scikitlearn&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-Analytics-D97736?style=for-the-badge&logo=chartdotjs&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Ready-4A2522?style=for-the-badge&logo=postgresql&logoColor=white)
+
+![Status](https://img.shields.io/badge/Status-Active-8B5A2B?style=flat-square)
+![Theme](https://img.shields.io/badge/Theme-Orange%20%7C%20Peach%20%7C%20Maroon-D97736?style=flat-square)
+![Mode](https://img.shields.io/badge/Mode-Light%20%26%20Dark-4A2522?style=flat-square)
+
+</div>
 
 ---
 
-## 1. Problem statement
+## 📖 Overview
 
-Land acquisition is a critical dependency for infrastructure and development
-projects. Delays are usually caused by a combination of ownership disputes,
-pending compensation, approval bottlenecks, legal cases, environmental clearance
-and incomplete rehabilitation. Detecting these risks early allows programme
-managers to intervene before a delay becomes unavoidable.
+Land acquisition is a critical dependency for infrastructure and development projects. Delays are almost always caused by a familiar set of risk factors — ownership disputes, pending compensation, approval bottlenecks, legal cases, environmental clearance and incomplete rehabilitation. **BhoomiAI** turns those signals into a delay probability, a risk band, an expected delay duration and a set of preventive actions.
 
-This project builds a reproducible predictive analytics workspace on top of a
-clearly labelled synthetic dataset, so the end-to-end pipeline (data → model →
-dashboard → reports) can be demonstrated without exposing real landowner or
-personal information.
+The entire pipeline — **data → model → dashboard → reports** — runs on a clearly labelled synthetic dataset, so the full system can be demonstrated without exposing any real landowner or personal information.
 
-## 2. Objectives
+> **Category:** Smart Automation · **Brand:** BhoomiAI · **Status:** Working academic prototype (synthetic data)
 
-- Generate a realistic, documented synthetic land-acquisition dataset (≥ 2,000 rows).
-- Train and compare Random Forest, Decision Tree and Logistic Regression classifiers.
-- Predict the probability of a land-acquisition delay and label the risk as Low / Medium / High.
-- Estimate expected delay duration for projects flagged as delayed.
-- Explain each prediction with contributing factors and suggested mitigation actions.
-- Provide an interactive dashboard, project management, monitoring, risk analytics,
-  prediction history and report exports.
-- Preserve the existing BhoomiAI visual identity, theme, logo, icons and components.
+---
 
-## 3. Key features
+## ✨ What's New (Latest Update)
 
-- **Overview dashboard** — KPI cards, planned vs actual progress, predicted project end,
-  project details, risk profile, phase distribution, top risks and monitoring table.
-- **Project management** — create, view, edit, archive and delete projects; search, filter
-  and sort by state, status and risk level.
-- **Data import** — CSV import with validation, CSV template download, and a one-click
-  rebuild of the 2,400-row synthetic demo workspace.
-- **Delay prediction** — real saved-model inference with delay probability, risk band,
-  expected delay days, contributing factors and mitigation suggestions.
-- **Risk analytics** — overall risk distribution, state-wise and district-wise exposure,
-  compensation, approval and legal bottleneck analysis, progress and feature importance.
-- **Project monitoring** — acquisition and compensation progress with risk and delay estimates.
-- **Mitigation plans** — system-suggested preventive actions with a user-controlled workflow status.
-- **Model performance** — accuracy, precision, recall, F1, confusion matrices, ROC curves and
-  feature importance for all three candidates.
-- **Prediction history** — audit trail of every stored prediction with model version.
-- **Reports & exports** — CSV, PDF and Excel exports generated from live data and persisted metrics.
-- **Notifications & settings** — unread notification badge and theme preference.
+This release focuses on a complete **UI/UX and theme overhaul** plus verified end-to-end functionality:
 
-## 4. Technology stack
+- 🎨 **Premium warm theme** — a rich **Orange / Peach / Maroon** palette (`#D97736`, `#FDF4ED`, `#FFE5D9`, `#4A2522`, `#8B5A2B`) replaces the old cold palette. No blue, no CSS gradients — solid, premium tones throughout.
+- 🌗 **Dark / Light mode toggle** — a one-click theme switch with persisted preference (`localStorage`). Every page, input, chart, sidebar item and icon is tuned for both modes.
+- 🖼️ **Fixed hero & section images** — the homepage hero now uses a fixed-attachment highway image with clear white text, and all banner/section images render correctly in **both** themes (no more blank panels).
+- 📊 **Interactive dashboard** — KPI cards plus responsive Chart.js charts (progress, phases, risk distribution, analytics) that fill their containers and animate in view.
+- 🧭 **Refined navigation** — theme-aware sidebar with active-state highlighting, inverted icons in dark mode and a brand logo that swaps with the theme.
+- ✅ **Fully tested** — every page, form, button and chart verified (0 errors, 0 broken links, 0 broken images); ML pipeline runs dummy predictions end-to-end.
 
-- **Backend:** Python 3, Django 6.1.3
-- **Database:** SQLite (`db.sqlite3`)
-- **Machine learning:** scikit-learn, pandas, numpy, joblib
-- **Frontend:** Django templates, existing BhoomiAI CSS design system, Chart.js
-- **Reports:** reportlab (PDF), openpyxl (Excel), standard-library CSV
-- **Authentication:** Django auth with a custom email-based user model
+---
 
-## 5. System architecture
+## 🧩 Features
+
+| Module | Highlights |
+|---|---|
+| **Overview Dashboard** | KPI cards, planned vs. actual progress, predicted project end, live risk profile and monitoring table. |
+| **Project Management** | Create, view, edit, archive and delete projects; search, filter and sort by state, status and risk level. |
+| **Delay Prediction** | Saved-model inference producing delay probability, risk band, expected delay days, contributing factors and mitigation suggestions. |
+| **Data Import** | Validated CSV import, downloadable CSV template, and one-click rebuild of the 2,400-row synthetic workspace. |
+| **Risk Analytics** | Overall risk distribution, state- and district-wise exposure, compensation / approval / legal bottleneck analysis, progress and feature importance. |
+| **Project Monitoring** | Acquisition and compensation progress with risk and delay estimates. |
+| **Mitigation Plans** | System-suggested preventive actions with a user-controlled workflow status. |
+| **Model Performance** | Accuracy, precision, recall, F1, confusion matrices, ROC curves and feature importance for all candidate models. |
+| **Prediction History** | Full audit trail of every stored prediction with its model version. |
+| **Reports & Exports** | CSV, PDF and Excel exports generated from live data and persisted metrics. |
+| **Documents & OCR** | Upload land documents and extract fields via the OCR engine, with validation and duplicate detection. |
+| **Notifications & Settings** | Unread notification badge and theme preference. |
+| **Authentication** | Email-based login / signup with a custom user model and Django admin panel. |
+
+---
+
+## 🛠️ Tech Stack
+
+**Backend**
+- **Python 3.12** · **Django 6.1**
+- Django REST Framework
+- Custom email-based authentication (`CustomUser`)
+
+**Machine Learning**
+- **scikit-learn** — Random Forest, Decision Tree, Logistic Regression
+- **pandas** · **numpy** — data processing
+- **joblib** — model serialization (`ml_artifacts/`)
+- Trained artifacts loaded once and cached in memory for fast inference
+
+**Data & Storage**
+- **SQLite** locally (zero-config)
+- **PostgreSQL** in production (via `DATABASE_URL`)
+
+**Frontend**
+- Django Templates
+- Custom CSS design system (premium warm theme + dark/light modes)
+- **Chart.js** for interactive analytics
+- Vanilla JavaScript (`analytics.js`, `dashboard.js`, `theme.js`, `app.js`)
+
+**Reports & Documents**
+- `reportlab` (PDF) · `openpyxl` (Excel) · standard-library CSV
+- `pytesseract` + `pymupdf` (OCR) · `Pillow`
+
+**Tooling & Deployment**
+- `whitenoise` (static files) · `gunicorn` (WSGI server) · `dj-database-url`
+- `pytest` + `pytest-django` · `python-dotenv`
+- Ready for **Render** (`render.yaml`, `build.sh`)
+
+---
+
+## 🏗️ Architecture
 
 ```
-data/land_acquisition_projects.csv        <- synthetic dataset (2,400 rows)
-ml_artifacts/                            <- trained classifier + regressor + metrics.json
-predictions/                             <- Django app: models, services, ML pipeline, views
-  synthetic.py                           <- documented synthetic data generator
-  ml.py                                  <- training, evaluation, serialization, inference
-  services.py                            <- import, prediction persistence, analytics
-  models.py                              <- LandAcquisitionProject, ProjectPrediction, ...
-  views.py / forms.py / urls.py
-templates/                               <- BhoomiAI templates (base, base_app, pages)
-static/                                  <- existing CSS/JS + predictive.css + analytics.js
-reports/                                 <- CSV / PDF / Excel exports
+manage.py
+bhoomiai_project/          <- settings, root URLs, WSGI/ASGI
+│
+├── core/                  <- landing page, health / live endpoints
+├── accounts/              <- custom user model, signup, login, profile
+├── dashboard/             <- overview dashboard + KPIs
+├── predictions/           <- ML pipeline, projects, analytics, monitoring
+│   ├── synthetic.py       <- documented synthetic data generator
+│   ├── ml.py              <- training, evaluation, serialization, inference
+│   ├── services.py        <- import, prediction persistence, analytics
+│   ├── models.py          <- LandAcquisitionProject, ProjectPrediction, ...
+│   └── views.py / forms.py / urls.py
+├── documents/             <- upload + management of land documents
+├── ocr_engine/            <- OCR extraction service
+├── validation/            <- rule-based validation of extracted data
+├── duplicates/            <- duplicate candidate detection
+├── reports/               <- CSV / PDF / Excel exports
+├── notifications/         <- in-app notification centre
+│
+├── templates/             <- base, base_app and all page templates
+├── static/                <- css/ · js/ · images/ (themed SVG & photos)
+├── data/                  <- synthetic dataset (land_acquisition_projects.csv)
+├── ml_artifacts/          <- trained models + metrics.json
+├── media/                 <- uploaded documents (git-ignored)
+└── screenshots/           <- application screenshots
 ```
 
-All analytics values come from the database or `ml_artifacts/metrics.json`. Nothing on
-the dashboard or in the reports is hardcoded.
+All analytics values come from the database or `ml_artifacts/metrics.json`. **Nothing on the dashboard or in the reports is hardcoded.**
 
-## 6. Synthetic dataset
+---
 
-- **File:** `data/land_acquisition_projects.csv`
-- **Rows:** 2,400
-- **Delay rate:** 56.87 % (1,365 delayed)
-- **States:** multiple Indian states and union territories
-- **Labelled:** every row carries `is_synthetic` semantics in the application; the dataset
-  is documented as synthetic and intended for academic demonstration only.
+## 🚀 Getting Started
 
-Key features: `project_id`, `project_name`, `state`, `district`, `project_type`,
-`land_area_acres`, `total_land_parcels`, `acquired_land_parcels`,
-`ownership_disputes`, `compensation_status`, `compensation_completion_percentage`,
-`approval_status`, `environmental_clearance_status`, `legal_case_count`,
-`rehabilitation_status`, `project_budget`, `allocated_budget`,
-`project_duration_months`, `elapsed_months`, `stakeholder_issues`, `delay_status`,
-`delay_days`.
+### Prerequisites
+- **Python 3.11+** (3.12 recommended)
+- **pip** and **venv**
+- *(Optional, for OCR)* **Tesseract OCR** installed and on your `PATH`
 
-### Generation assumptions
-
-- Delay risk increases with ownership disputes, legal cases, stakeholder issues,
-  pending/low compensation completion, pending approvals, pending environmental
-  clearance and incomplete rehabilitation.
-- `delay_status` (binary) and `delay_days` are derived from a documented risk score
-  with controlled noise; they are **excluded** from model inputs to prevent leakage.
-- IDs, dates and the target columns are never used as prediction inputs.
-- No real landowner or personal information is used.
-
-Regenerate with:
-
+### 1. Clone the repository
 ```bash
-python manage.py generate_synthetic_data
-python manage.py generate_synthetic_data --seed-db
+git clone https://github.com/sachin-gautam-12/BhoomiAI-Smart-Land-Record-System.git
+cd BhoomiAI-Smart-Land-Record-System
+git checkout feature/predictive-delays
 ```
 
-## 7. Machine learning
+### 2. Create and activate a virtual environment
+```bash
+# Windows (PowerShell)
+python -m venv venv
+.\venv\Scripts\activate
+
+# macOS / Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Configure environment variables *(optional for local use)*
+Create a `.env` file in the project root (this file is git-ignored):
+```env
+SECRET_KEY=your-long-random-secret-key
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1,localhost
+```
+> If you skip this step, sensible development defaults are used automatically.
+
+### 5. Apply database migrations
+```bash
+python manage.py migrate
+```
+
+### 6. Seed the demo workspace *(recommended — builds the dashboard data)*
+```bash
+# Generates the 2,400-row synthetic dataset and seeds projects + predictions
+python manage.py generate_synthetic_data --seed-db
+
+# (optional) Generate demo land documents for the Documents / OCR pages
+python manage.py seed_dummy_data
+```
+
+### 7. Start the development server
+```bash
+python manage.py runserver
+```
+Then open **http://127.0.0.1:8000/** and sign in.
+
+---
+
+## 🔑 Default Accounts
+
+A superuser and a demo account can be used to explore the platform immediately.
+
+| Role | Email | Password | Access |
+|---|---|---|---|
+| **Admin (superuser)** | `admin@bhoomiai.com` | `Admin@Bhoomi2026` | Full app **+ Django admin panel** (`/admin/`) |
+| **Demo (standard user)** | `demo@bhoomiai.com` | `Demo@Bhoomi2026` | Standard application access |
+
+> Login is **email-based**. To (re)create the admin from scratch:
+> ```bash
+> python manage.py createsuperuser
+> ```
+>
+> ⚠️ **Security note:** change these default passwords before deploying to a public environment.
+
+---
+
+## 🧠 Machine Learning
 
 ### Pipeline
-
-- Dataset loading and cleaning (`predictions/synthetic.py`, `predictions/ml.py`)
-- Missing-value handling via `SimpleImputer`
-- Categorical encoding via `OneHotEncoder`
-- Numerical scaling via `StandardScaler`
-- Stratified 80 / 20 train-test split
+- Dataset loading & cleaning (`predictions/synthetic.py`, `predictions/ml.py`)
+- Missing-value handling (`SimpleImputer`) → categorical encoding (`OneHotEncoder`) → scaling (`StandardScaler`)
+- Stratified **80 / 20** train–test split
 - Three candidate classifiers trained on the same preprocessing pipeline
-- A separate Random Forest regressor for delay duration on delayed projects only
-- Serialization with `joblib` to `ml_artifacts/`
+- A separate Random Forest regressor for delay duration (delayed projects only)
+- Serialization with `joblib` into `ml_artifacts/`
 
-### Candidates
-
+### Candidate models
 1. Random Forest Classifier
 2. Decision Tree Classifier
 3. Logistic Regression
 
-### Selection
-
-The candidate with the highest ROC-AUC on the test split is selected and activated.
-On the current dataset this is **Logistic Regression**.
+**Selection rule:** the candidate with the highest **ROC-AUC** on the test split is activated. On the current dataset this is **Logistic Regression**.
 
 ### Persisted metrics (`ml_artifacts/metrics.json`)
 
 | Algorithm | Accuracy | Precision | Recall | F1 | ROC-AUC |
 |---|---:|---:|---:|---:|---:|
-| Logistic Regression (selected) | 0.715 | 0.774 | 0.703 | 0.737 | 0.784 |
+| Logistic Regression *(selected)* | 0.715 | 0.774 | 0.703 | 0.737 | 0.784 |
 | Random Forest | 0.706 | — | — | 0.749 | 0.761 |
 | Decision Tree | 0.637 | — | — | 0.672 | 0.668 |
 
-Delay-duration regressor (Random Forest, delayed projects only):
-MAE 50.37 days, RMSE 77.65 days, R² 0.622.
+Delay-duration regressor (Random Forest, delayed projects only): **MAE 50.37 days · RMSE 77.65 days · R² 0.622**.
 
-All values are read from `ml_artifacts/metrics.json`; nothing is hardcoded.
+### Risk bands
+| Delay probability | Risk level |
+|---|---|
+| `< 0.35` | 🟢 Low |
+| `0.35 – 0.649` | 🟠 Medium |
+| `≥ 0.65` | 🔴 High |
 
-### Risk thresholds
-
-- Delay probability `< 0.35` → Low
-- `0.35 – 0.649` → Medium
-- `>= 0.65` → High
-- Delay outcome threshold `>= 0.50` → Delayed
-
-### Risk scoring vs. ML
-
-Six rule-based risk cards (Land Ownership, Compensation, Legal, Approval,
-Environmental, Rehabilitation) are computed deterministically from project features.
-They are displayed alongside, but are separate from, the ML delay probability.
-
-## 8. Database structure
-
-Main models:
-
-- `LandAcquisitionProject` — project snapshot (features, status, synthetic flag)
-- `ProjectPrediction` — probability, risk level, delay days, estimated completion,
-  model version, timestamp
-- `PredictionFactor` — contributing factors with impact scores
-- `ModelVersion` — algorithm, version, training rows, metrics, active flag
-- `MitigationPlan` — suggested preventive actions with workflow status
-- `ActivityLog` — audit trail
-
-Migrations are under `predictions/migrations/`. The database already contains
-2,400 seeded projects and predictions; do not reset it.
-
-## 9. Installation
-
-```bash
-cd "C:\Users\sachin kumar singh\Downloads\bhoomiai\bhoomiai\bhoomiai_django"
-python -m venv venv
-.\venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-```
-
-## 10. Run commands
-
-```bash
-# Generate the synthetic dataset (CSV only)
-python manage.py generate_synthetic_data
-
-# Generate and seed the database (2,400 projects + predictions)
-python manage.py generate_synthetic_data --seed-db
-
-# Train / compare models (writes ml_artifacts/)
-python manage.py train_delay_model
-
-# Start the development server
-python manage.py runserver
-```
-
-Open `http://127.0.0.1:8000/` and sign in. A default admin account can be created
-with `python manage.py createsuperuser`.
-
-## 11. Testing
-
-```bash
-python manage.py check
-python manage.py check --database default
-python manage.py test
-```
-
-The test suite covers synthetic dataset size and relationships, model metrics and
-artifacts, project CRUD, prediction persistence and dashboard/report endpoints.
-
-## 12. Screenshots
-
-Screenshots of the updated application are stored in the `screenshots/` directory:
-dashboard, projects, add project, data import, delay prediction, risk analytics,
-monitoring, mitigation plans, model performance, prediction history, settings,
-reports, home and project detail.
-
-## 13. Deployment (Render + PostgreSQL)
-
-The project is configured for Render using PostgreSQL while keeping SQLite locally.
-
-### Render setup
-1. Push the `feature/predictive-delays` branch to GitHub (already done).
-2. In Render, create a new **Web Service** from the GitHub repository.
-3. Create a **PostgreSQL** database (free tier) and link it to the web service.
-4. Set environment variables (see below).
-5. Build command: `./build.sh` (runs pip install, collectstatic, migrate).
-6. Start command: `gunicorn bhoomiai_project.wsgi:application`.
-
-### Required environment variables
-- `SECRET_KEY` — long random string
-- `DEBUG` — `False`
-- `ALLOWED_HOSTS` — your Render hostname (e.g. `app.onrender.com`)
-- `CSRF_TRUSTED_ORIGINS` — `https://app.onrender.com`
-- `DATABASE_URL` — provided automatically by the linked PostgreSQL database
-- Optional email: `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`, `DEFAULT_FROM_EMAIL`
-
-### Notes
-- ML artifacts in `ml_artifacts/` and the synthetic dataset in `data/` are committed and loaded at runtime.
-- Render's filesystem is ephemeral: uploaded media and generated reports are not persisted. Reports are generated on demand, so no persistent storage is required for CSV/PDF exports.
-- Do not copy the local SQLite database to production; run migrations on the empty PostgreSQL database.
-
-## 14. Limitations
-
-- The dataset is synthetic and intended for academic demonstration only.
-- Risk scores and mitigation suggestions are heuristic indicators, not legal or
-  financial advice.
-- The delay-duration regressor is trained only on delayed projects.
-- Python-side aggregation is used for some analytics (acceptable at ~2,400 rows).
-
-## 15. Future scope
-
-- Real project data ingestion with privacy controls.
-- Additional algorithms (e.g. XGBoost, gradient boosting) and hyper-parameter tuning.
-- Time-series forecasting of acquisition progress.
-- Role-based access control and audit dashboards.
-- Scheduled retraining and model monitoring.
+Delay outcome threshold `≥ 0.50` → *Delayed*. Six rule-based risk cards (Land Ownership, Compensation, Legal, Approval, Environmental, Rehabilitation) are computed deterministically and shown **alongside** — but separately from — the ML probability.
 
 ---
 
-## Synthetic data disclaimer
+## 🗂️ Synthetic Dataset
 
-All project records, delay labels and predictions in this repository are generated
-from a documented synthetic process. No real landowner, parcel owner or personal
-information is used. The system is an academic demonstration and must not be used
-as the sole basis for legal, financial or acquisition decisions.
+- **File:** `data/land_acquisition_projects.csv`
+- **Rows:** 2,400 · **Delay rate:** 56.87 % (1,365 delayed)
+- **Coverage:** multiple Indian states and districts
+- **Clearly labelled synthetic** — intended for academic demonstration only
+
+Key features include: `land_area_acres`, `total_land_parcels`, `acquired_land_parcels`, `ownership_disputes`, `compensation_status`, `compensation_completion_percentage`, `approval_status`, `environmental_clearance_status`, `legal_case_count`, `rehabilitation_status`, `project_budget`, `allocated_budget`, `project_duration_months`, `elapsed_months`, `stakeholder_issues`, plus the `delay_status` / `delay_days` targets.
+
+**Leakage-safe by design:** IDs, dates and the target columns are never used as model inputs.
+
+Regenerate at any time:
+```bash
+python manage.py generate_synthetic_data
+python manage.py generate_synthetic_data --seed-db
+python manage.py train_delay_model        # retrain + compare + write ml_artifacts/
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+python manage.py check
+python manage.py test
+```
+
+The suite covers synthetic dataset size and relationships, model metrics and artifacts, project CRUD, prediction persistence and dashboard/report endpoints. **Current status: 12/12 tests passing.**
+
+---
+
+## ☁️ Deployment (Render + PostgreSQL)
+
+The project is pre-configured for **Render** using PostgreSQL while keeping SQLite locally.
+
+1. Push the branch to GitHub.
+2. In Render, create a **Web Service** from the repository — `render.yaml` provisions it automatically.
+3. Create a **PostgreSQL** database (free tier) and link it (sets `DATABASE_URL`).
+4. Build command: `./build.sh` (installs deps → `collectstatic` → `migrate`).
+5. Start command: `gunicorn bhoomiai_project.wsgi:application`.
+
+**Required environment variables**
+
+| Variable | Value |
+|---|---|
+| `SECRET_KEY` | long random string |
+| `DEBUG` | `False` |
+| `ALLOWED_HOSTS` | your Render hostname |
+| `CSRF_TRUSTED_ORIGINS` | `https://<your-app>.onrender.com` |
+| `DATABASE_URL` | provided by the linked PostgreSQL database |
+
+> ML artifacts (`ml_artifacts/`) and the synthetic dataset (`data/`) are committed and loaded at runtime. Render's filesystem is ephemeral, so reports are generated on demand. **Never copy the local SQLite database to production** — run migrations on the empty PostgreSQL database.
+
+---
+
+## ⚠️ Limitations & Disclaimer
+
+- The dataset is **synthetic** and intended for **academic demonstration only**.
+- Risk scores and mitigation suggestions are heuristic indicators — **not** legal or financial advice.
+- The delay-duration regressor is trained only on delayed projects.
+- Python-side aggregation is used for some analytics (fine at ~2,400 rows).
+
+<div align="center">
+
+**All project records, delay labels and predictions in this repository are generated from a documented synthetic process. No real landowner, parcel owner or personal information is used. This system must not be used as the sole basis for legal, financial or acquisition decisions.**
+
+<br>
+
+Made with 🌾 &nbsp;for smarter land acquisition.
+
+</div>

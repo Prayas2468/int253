@@ -4,12 +4,12 @@
       <stop offset="0" stop-color="#F3D18B"/><stop offset="1" stop-color="#C9861B"/>
     </linearGradient>
     <linearGradient id="spNavy" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2C6BC4"/><stop offset="1" stop-color="#17365D"/>
+      <stop offset="0" stop-color="#D97736"/><stop offset="1" stop-color="#4A2522"/>
     </linearGradient>
   </defs>
   <circle cx="48" cy="48" r="40" fill="#FBF1DC"/>
   <circle cx="48" cy="48" r="31" fill="#FFFFFF" stroke="url(#spGold)" stroke-width="5"/>
-  <circle cx="48" cy="48" r="4" fill="#17365D"/>
+  <circle cx="48" cy="48" r="4" fill="#4A2522"/>
   <path d="M48 28v21l13 8" fill="none" stroke="url(#spNavy)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
   <g fill="#C9861B">
     <rect x="46" y="12" width="4" height="6" rx="2"/>

@@ -7,25 +7,25 @@
       <stop offset="0" stop-color="#8FD6B4"/><stop offset="1" stop-color="#1F9D6B"/>
     </linearGradient>
     <linearGradient id="dvBlue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4A8BDB"/><stop offset="1" stop-color="#2457A6"/>
+      <stop offset="0" stop-color="#D97736"/><stop offset="1" stop-color="#8B5A2B"/>
     </linearGradient>
     <filter id="dvShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="9" stdDeviation="10" flood-color="#17365D" flood-opacity="0.16"/>
+      <feDropShadow dx="0" dy="9" stdDeviation="10" flood-color="#4A2522" flood-opacity="0.16"/>
     </filter>
   </defs>
 
   <rect width="420" height="300" rx="24" fill="url(#dvBg)"/>
   <circle cx="356" cy="52" r="40" fill="#D8F0E3"/>
-  <circle cx="56" cy="252" r="30" fill="#DCEAF9"/>
+  <circle cx="56" cy="252" r="30" fill="#FBEADF"/>
 
   <!-- document -->
   <g transform="translate(92 34) rotate(-3 90 120)" filter="url(#dvShadow)">
     <rect width="180" height="232" rx="14" fill="#FFFFFF" stroke="#C4DDD0" stroke-width="2"/>
     <rect width="180" height="12" rx="6" fill="url(#dvBlue)"/>
-    <rect x="20" y="30" width="86" height="10" rx="5" fill="#17365D"/>
-    <rect x="20" y="48" width="128" height="6" rx="3" fill="#DCE6F2"/>
-    <rect x="20" y="61" width="110" height="6" rx="3" fill="#DCE6F2"/>
-    <line x1="20" y1="82" x2="160" y2="82" stroke="#E3EBF4" stroke-width="1.5"/>
+    <rect x="20" y="30" width="86" height="10" rx="5" fill="#4A2522"/>
+    <rect x="20" y="48" width="128" height="6" rx="3" fill="#FBEADF"/>
+    <rect x="20" y="61" width="110" height="6" rx="3" fill="#FBEADF"/>
+    <line x1="20" y1="82" x2="160" y2="82" stroke="#FDF0E7" stroke-width="1.5"/>
     <g fill="#EEF6F1">
       <rect x="20" y="94" width="140" height="26" rx="6"/>
       <rect x="20" y="128" width="140" height="26" rx="6"/>
@@ -41,7 +41,7 @@
       <rect x="126" y="135" width="24" height="12" rx="6"/>
       <rect x="126" y="169" width="24" height="12" rx="6"/>
     </g>
-    <path d="M20 204h74" stroke="#DCE6F2" stroke-width="6" stroke-linecap="round"/>
+    <path d="M20 204h74" stroke="#FBEADF" stroke-width="6" stroke-linecap="round"/>
   </g>
 
   <!-- verified seal -->
@@ -63,7 +63,7 @@
     <text x="34" y="18" font-family="Inter, sans-serif" font-size="8.5" font-weight="700" fill="#1F9D6B">5 / 5 RULES PASSED</text>
   </g>
   <g transform="translate(290 20)">
-    <rect width="106" height="28" rx="14" fill="#17365D"/>
+    <rect width="106" height="28" rx="14" fill="#4A2522"/>
     <circle cx="15" cy="14" r="4" fill="#8FD6B4"/>
     <text x="26" y="18" font-family="Inter, sans-serif" font-size="8.5" font-weight="700" fill="#FFFFFF">VERIFIED</text>
   </g>

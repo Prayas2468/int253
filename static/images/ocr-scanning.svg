@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 360" width="520" height="360" role="img" aria-label="OCR scanning a land record document">
   <defs>
     <linearGradient id="osBg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#EDF4FC"/><stop offset="1" stop-color="#E4EEF9"/>
+      <stop offset="0" stop-color="#FDF4ED"/><stop offset="1" stop-color="#FDF0E7"/>
     </linearGradient>
     <linearGradient id="osBlue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4A8BDB"/><stop offset="1" stop-color="#2457A6"/>
+      <stop offset="0" stop-color="#D97736"/><stop offset="1" stop-color="#8B5A2B"/>
     </linearGradient>
     <linearGradient id="osNavy" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2457A6"/><stop offset="1" stop-color="#17365D"/>
+      <stop offset="0" stop-color="#8B5A2B"/><stop offset="1" stop-color="#4A2522"/>
     </linearGradient>
     <linearGradient id="osGreen" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#8FD6B4"/><stop offset="1" stop-color="#2F8C66"/>
@@ -18,29 +18,29 @@
       <stop offset="1" stop-color="#E94B5A" stop-opacity="0"/>
     </linearGradient>
     <filter id="osShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#17365D" flood-opacity="0.16"/>
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#4A2522" flood-opacity="0.16"/>
     </filter>
   </defs>
 
   <rect width="520" height="360" rx="24" fill="url(#osBg)"/>
-  <circle cx="430" cy="70" r="58" fill="#D9E8FA"/>
+  <circle cx="430" cy="70" r="58" fill="#FBEADF"/>
   <circle cx="88" cy="300" r="46" fill="#DCEEE5"/>
 
   <!-- scanned document -->
   <g transform="translate(66 40) rotate(-3 110 140)" filter="url(#osShadow)">
-    <rect width="220" height="280" rx="14" fill="#FFFFFF" stroke="#C8D9EC" stroke-width="2"/>
+    <rect width="220" height="280" rx="14" fill="#FFFFFF" stroke="#EADCD2" stroke-width="2"/>
     <rect width="220" height="14" rx="7" fill="url(#osBlue)"/>
-    <rect x="24" y="36" width="98" height="10" rx="5" fill="#17365D"/>
-    <rect x="24" y="56" width="150" height="6" rx="3" fill="#DCE6F2"/>
-    <rect x="24" y="70" width="128" height="6" rx="3" fill="#DCE6F2"/>
-    <line x1="24" y1="90" x2="196" y2="90" stroke="#E3EBF4" stroke-width="1.5"/>
-    <g fill="#EEF4FB">
+    <rect x="24" y="36" width="98" height="10" rx="5" fill="#4A2522"/>
+    <rect x="24" y="56" width="150" height="6" rx="3" fill="#FBEADF"/>
+    <rect x="24" y="70" width="128" height="6" rx="3" fill="#FBEADF"/>
+    <line x1="24" y1="90" x2="196" y2="90" stroke="#FDF0E7" stroke-width="1.5"/>
+    <g fill="#FDF4ED">
       <rect x="24" y="102" width="172" height="28" rx="6"/>
       <rect x="24" y="138" width="172" height="28" rx="6"/>
       <rect x="24" y="174" width="172" height="28" rx="6"/>
       <rect x="24" y="210" width="172" height="28" rx="6"/>
     </g>
-    <g fill="#9FB6CF">
+    <g fill="#D8C3B8">
       <rect x="36" y="112" width="58" height="6" rx="3"/>
       <rect x="36" y="148" width="72" height="6" rx="3"/>
       <rect x="36" y="184" width="64" height="6" rx="3"/>
@@ -52,38 +52,38 @@
       <rect x="156" y="181" width="30" height="14" rx="7"/>
       <rect x="156" y="217" width="30" height="14" rx="7"/>
     </g>
-    <rect x="24" y="252" width="110" height="8" rx="4" fill="#E0E9F3"/>
+    <rect x="24" y="252" width="110" height="8" rx="4" fill="#FDF0E7"/>
   </g>
 
   <!-- scan frame + beam -->
-  <g fill="none" stroke="#2457A6" stroke-width="5" stroke-linecap="round">
+  <g fill="none" stroke="#8B5A2B" stroke-width="5" stroke-linecap="round">
     <path d="M54 70V48a8 8 0 0 1 8-8h22"/>
     <path d="M268 40h18a8 8 0 0 1 8 8v22"/>
     <path d="M294 286v22a8 8 0 0 1-8 8h-18"/>
     <path d="M84 316H66a8 8 0 0 1-8-8v-22"/>
   </g>
-  <rect x="54" y="40" width="240" height="276" rx="10" fill="none" stroke="#4A8BDB" stroke-width="1.6" stroke-dasharray="6 8" opacity="0.5"/>
+  <rect x="54" y="40" width="240" height="276" rx="10" fill="none" stroke="#D97736" stroke-width="1.6" stroke-dasharray="6 8" opacity="0.5"/>
   <rect x="54" y="168" width="240" height="28" fill="url(#osScan)"/>
   <rect x="54" y="180" width="240" height="2.5" fill="#E94B5A" opacity="0.85"/>
 
   <!-- extracted fields panel -->
   <g transform="translate(322 54)" filter="url(#osShadow)">
-    <rect width="164" height="196" rx="14" fill="#FFFFFF" stroke="#C8D9EC" stroke-width="2"/>
+    <rect width="164" height="196" rx="14" fill="#FFFFFF" stroke="#EADCD2" stroke-width="2"/>
     <rect x="0" y="0" width="164" height="44" rx="14" fill="url(#osNavy)"/>
     <rect x="0" y="22" width="164" height="22" fill="url(#osNavy)"/>
     <circle cx="22" cy="22" r="9" fill="#8FD6B4" opacity="0.25"/>
     <circle cx="22" cy="22" r="4.5" fill="#8FD6B4"/>
     <text x="40" y="20" font-family="Inter, Segoe UI, sans-serif" font-size="10" font-weight="700" fill="#FFFFFF">OCR EXTRACTION</text>
-    <text x="40" y="33" font-family="Inter, Segoe UI, sans-serif" font-size="8" fill="#BCD3EE">confidence 98.4%</text>
+    <text x="40" y="33" font-family="Inter, Segoe UI, sans-serif" font-size="8" fill="#F3D9CB">confidence 98.4%</text>
     <g font-family="Inter, Segoe UI, sans-serif">
-      <text x="16" y="66" font-size="7.5" font-weight="700" fill="#5B6B80">SURVEY NO.</text>
-      <text x="16" y="82" font-size="11" font-weight="700" fill="#17365D">142/2</text>
-      <text x="16" y="104" font-size="7.5" font-weight="700" fill="#5B6B80">AREA</text>
-      <text x="16" y="120" font-size="11" font-weight="700" fill="#17365D">1.24 ha</text>
-      <text x="16" y="142" font-size="7.5" font-weight="700" fill="#5B6B80">DISTRICT</text>
-      <text x="16" y="158" font-size="11" font-weight="700" fill="#17365D">Pune</text>
+      <text x="16" y="66" font-size="7.5" font-weight="700" fill="#6B726B">SURVEY NO.</text>
+      <text x="16" y="82" font-size="11" font-weight="700" fill="#4A2522">142/2</text>
+      <text x="16" y="104" font-size="7.5" font-weight="700" fill="#6B726B">AREA</text>
+      <text x="16" y="120" font-size="11" font-weight="700" fill="#4A2522">1.24 ha</text>
+      <text x="16" y="142" font-size="7.5" font-weight="700" fill="#6B726B">DISTRICT</text>
+      <text x="16" y="158" font-size="11" font-weight="700" fill="#4A2522">Pune</text>
     </g>
-    <g fill="#E8F1FB">
+    <g fill="#FDF4ED">
       <rect x="104" y="58" width="44" height="30" rx="7"/>
       <rect x="104" y="96" width="44" height="30" rx="7"/>
       <rect x="104" y="134" width="44" height="30" rx="7"/>
@@ -98,9 +98,9 @@
   <!-- AI chip -->
   <g transform="translate(300 268)" filter="url(#osShadow)">
     <rect width="76" height="58" rx="14" fill="url(#osNavy)"/>
-    <rect x="18" y="12" width="40" height="34" rx="8" fill="none" stroke="#8FBCF2" stroke-width="2.2"/>
+    <rect x="18" y="12" width="40" height="34" rx="8" fill="none" stroke="#F4A261" stroke-width="2.2"/>
     <circle cx="38" cy="29" r="6" fill="#E94B5A"/>
-    <g stroke="#8FBCF2" stroke-width="2.2" stroke-linecap="round">
+    <g stroke="#F4A261" stroke-width="2.2" stroke-linecap="round">
       <path d="M22 6v6M38 6v6M54 6v6M22 46v6M38 46v6M54 46v6M10 18h8M10 30h8M58 18h8M58 30h8"/>
     </g>
   </g>
