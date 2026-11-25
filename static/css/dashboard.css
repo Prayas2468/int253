@@ -91,7 +91,7 @@
 
 /* Glowing state bubbles for document volume. */
 .glow-marker {
-    filter: drop-shadow(0 0 5px rgba(6, 182, 212, 0.85)) drop-shadow(0 0 12px rgba(59, 130, 246, 0.5));
+    filter: drop-shadow(0 0 5px rgba(47, 143, 107, 0.85)) drop-shadow(0 0 12px rgba(31, 111, 84, 0.5));
     animation: markerPulse 3.4s ease-in-out infinite;
 }
 

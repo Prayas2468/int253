@@ -2191,7 +2191,7 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
 [data-theme="dark"] h3,
 [data-theme="dark"] h4 { color: #FFFFFF; }
 
-::selection { background: rgba(59, 130, 246, 0.32); }
+::selection { background: rgba(31, 111, 84, 0.32); }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -2218,13 +2218,13 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
 .main-nav a.is-active {
     background: var(--primary-soft);
     color: var(--primary);
-    box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.28);
+    box-shadow: inset 0 0 0 1px rgba(31, 111, 84, 0.28);
 }
 
 [data-theme="dark"] .main-nav a.is-active {
-    color: #7DD3FC;
-    background: rgba(59, 130, 246, 0.14);
-    box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.32), 0 0 20px rgba(6, 182, 212, 0.16);
+    color: #8FDCC0;
+    background: rgba(31, 111, 84, 0.14);
+    box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.32), 0 0 20px rgba(47, 143, 107, 0.16);
 }
 
 /* ---------- Buttons ---------- */
@@ -2235,19 +2235,19 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
 }
 
 .btn-primary {
-    box-shadow: 0 10px 26px rgba(59, 130, 246, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    box-shadow: 0 10px 26px rgba(31, 111, 84, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .btn-primary:hover {
-    box-shadow: 0 18px 42px rgba(59, 130, 246, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    box-shadow: 0 18px 42px rgba(31, 111, 84, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .btn-accent {
-    box-shadow: 0 10px 26px rgba(6, 182, 212, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    box-shadow: 0 10px 26px rgba(47, 143, 107, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .btn-accent:hover {
-    box-shadow: 0 18px 42px rgba(6, 182, 212, 0.44), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    box-shadow: 0 18px 42px rgba(47, 143, 107, 0.44), inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 [data-theme="dark"] .btn-ghost {
@@ -2257,8 +2257,8 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
 
 [data-theme="dark"] .btn-ghost:hover {
     border-color: var(--primary);
-    color: #93C5FD;
-    background: rgba(59, 130, 246, 0.12);
+    color: #B7E4D0;
+    background: rgba(31, 111, 84, 0.12);
 }
 
 /* ---------- Hero with premium photography ---------- */
@@ -2305,7 +2305,7 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
     border-radius: 26px;
     overflow: hidden;
     border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(59, 130, 246, 0.16);
+    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(31, 111, 84, 0.16);
     animation: floatY 9s ease-in-out infinite;
 }
 
@@ -2331,7 +2331,7 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
 [data-theme="dark"] .hero-map-card {
     background: rgba(9, 16, 29, 0.72);
     border-color: rgba(56, 189, 248, 0.24);
-    box-shadow: var(--shadow), 0 0 32px rgba(6, 182, 212, 0.12);
+    box-shadow: var(--shadow), 0 0 32px rgba(47, 143, 107, 0.12);
 }
 
 /* Recolour the light India artwork so it sits naturally on dark surfaces. */
@@ -2361,13 +2361,13 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
 }
 
 .card-hover:hover {
-    border-color: rgba(59, 130, 246, 0.42);
+    border-color: rgba(31, 111, 84, 0.42);
     box-shadow: var(--shadow), var(--glow);
 }
 
 [data-theme="dark"] .card-hover:hover {
     border-color: rgba(56, 189, 248, 0.5);
-    box-shadow: var(--shadow-lg), 0 0 34px rgba(6, 182, 212, 0.18);
+    box-shadow: var(--shadow-lg), 0 0 34px rgba(47, 143, 107, 0.18);
 }
 
 .stat-card::after {
@@ -2381,7 +2381,7 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
     transition: opacity 0.25s ease;
 }
 
-.stat-card:hover { border-color: rgba(59, 130, 246, 0.4); }
+.stat-card:hover { border-color: rgba(31, 111, 84, 0.4); }
 .stat-card:hover::after { opacity: 1; }
 
 [data-theme="dark"] .stat-card:hover {
@@ -2444,7 +2444,7 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #22D3EE;
+    background: #5FD3A8;
     box-shadow: 0 0 10px rgba(34, 211, 238, 0.9);
 }
 
@@ -2454,7 +2454,7 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
     color: #CBD5E1;
 }
 
-[data-theme="dark"] .data-table tbody tr:hover { background: rgba(59, 130, 246, 0.1); }
+[data-theme="dark"] .data-table tbody tr:hover { background: rgba(31, 111, 84, 0.1); }
 
 /* ---------- Chips ---------- */
 .chip {
@@ -2467,7 +2467,7 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
     background: var(--primary);
     border-color: var(--primary);
     color: #fff;
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.32);
+    box-shadow: 0 8px 20px rgba(31, 111, 84, 0.32);
 }
 
 .chip.is-active:hover { color: #fff; }
@@ -2478,9 +2478,9 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
 }
 
 [data-theme="dark"] .chip:hover {
-    color: #7DD3FC;
+    color: #8FDCC0;
     border-color: rgba(56, 189, 248, 0.5);
-    background: rgba(59, 130, 246, 0.12);
+    background: rgba(31, 111, 84, 0.12);
 }
 
 /* ---------- Footer ---------- */

@@ -17,9 +17,9 @@
     function palette() {
         var dark = document.documentElement.getAttribute('data-theme') === 'dark';
         return {
-            primary: cssVar('--primary', '#3B82F6'),
-            primaryStrong: cssVar('--primary-strong', '#2563EB'),
-            accent: cssVar('--accent', '#06B6D4'),
+            primary: cssVar('--primary', '#1F6F54'),
+            primaryStrong: cssVar('--primary-strong', '#14532D'),
+            accent: cssVar('--accent', '#2F8F6B'),
             success: cssVar('--success', '#10B981'),
             warning: cssVar('--warning', '#F59E0B'),
             danger: cssVar('--danger', '#EF4444'),

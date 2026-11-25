@@ -34,11 +34,11 @@
 
     function palette() {
         return {
-            primary: cssVar('--primary', '#3B82F6'),
-            accent: cssVar('--accent', '#06B6D4'),
+            primary: cssVar('--primary', '#1F6F54'),
+            accent: cssVar('--accent', '#2F8F6B'),
             success: cssVar('--success', '#10B981'),
             warning: cssVar('--warning', '#F59E0B'),
-            info: cssVar('--info', '#3B82F6'),
+            info: cssVar('--info', '#1F6F54'),
             text: cssVar('--text', '#0F172A'),
             muted: cssVar('--muted', '#64748B'),
             border: cssVar('--border', 'rgba(15,23,42,.1)'),
@@ -135,9 +135,9 @@
 
     function mapColors() {
         return {
-            primary: cssVar('--primary', '#3B82F6'),
+            primary: cssVar('--primary', '#1F6F54'),
             primarySoft: cssVar('--primary-soft', 'rgba(59,130,246,.16)'),
-            accent: cssVar('--accent', '#06B6D4'),
+            accent: cssVar('--accent', '#2F8F6B'),
             dark: document.documentElement.getAttribute('data-theme') === 'dark'
         };
     }
