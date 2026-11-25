@@ -229,7 +229,32 @@ dashboard, projects, add project, data import, delay prediction, risk analytics,
 monitoring, mitigation plans, model performance, prediction history, settings,
 reports, home and project detail.
 
-## 13. Limitations
+## 13. Deployment (Render + PostgreSQL)
+
+The project is configured for Render using PostgreSQL while keeping SQLite locally.
+
+### Render setup
+1. Push the `feature/predictive-delays` branch to GitHub (already done).
+2. In Render, create a new **Web Service** from the GitHub repository.
+3. Create a **PostgreSQL** database (free tier) and link it to the web service.
+4. Set environment variables (see below).
+5. Build command: `./build.sh` (runs pip install, collectstatic, migrate).
+6. Start command: `gunicorn bhoomiai_project.wsgi:application`.
+
+### Required environment variables
+- `SECRET_KEY` — long random string
+- `DEBUG` — `False`
+- `ALLOWED_HOSTS` — your Render hostname (e.g. `app.onrender.com`)
+- `CSRF_TRUSTED_ORIGINS` — `https://app.onrender.com`
+- `DATABASE_URL` — provided automatically by the linked PostgreSQL database
+- Optional email: `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`, `DEFAULT_FROM_EMAIL`
+
+### Notes
+- ML artifacts in `ml_artifacts/` and the synthetic dataset in `data/` are committed and loaded at runtime.
+- Render's filesystem is ephemeral: uploaded media and generated reports are not persisted. Reports are generated on demand, so no persistent storage is required for CSV/PDF exports.
+- Do not copy the local SQLite database to production; run migrations on the empty PostgreSQL database.
+
+## 14. Limitations
 
 - The dataset is synthetic and intended for academic demonstration only.
 - Risk scores and mitigation suggestions are heuristic indicators, not legal or
@@ -237,7 +262,7 @@ reports, home and project detail.
 - The delay-duration regressor is trained only on delayed projects.
 - Python-side aggregation is used for some analytics (acceptable at ~2,400 rows).
 
-## 14. Future scope
+## 15. Future scope
 
 - Real project data ingestion with privacy controls.
 - Additional algorithms (e.g. XGBoost, gradient boosting) and hyper-parameter tuning.
