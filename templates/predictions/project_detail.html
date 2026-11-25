@@ -35,6 +35,10 @@
       <span class="pill pill-neutral">{{ project.get_status_display }}</span>
     </div>
 
+    <figure class="project-media">
+      <img src="{% static 'images/infrastructure/road-construction.jpg' %}" alt="Road construction activity" loading="lazy">
+    </figure>
+
     <div class="progress-line" style="margin-bottom:10px;">
       <div class="progress-track"><span style="width: {{ project.acquisition_progress }}%;"></span></div>
       <span class="progress-value">{{ project.acquisition_progress }}%</span>

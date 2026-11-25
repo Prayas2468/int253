@@ -193,6 +193,33 @@
 
 .mini-note { color: var(--muted); font-size: 0.73rem; line-height: 1.5; }
 
+/* Project imagery ----------------------------------------------------- */
+.project-media {
+  margin: 0 0 14px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  max-height: 180px;
+}
+.project-media img {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  object-position: center;
+}
+.project-thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+}
+.cell-title-media { flex-direction: row; align-items: center; gap: 10px; min-width: 180px; }
+.cell-title-media > div { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+
 /* Risk + status pills -------------------------------------------------- */
 .pill-risk-high, .pill-high { background: var(--danger-soft); color: var(--danger); }
 .pill-risk-medium, .pill-medium { background: var(--warning-soft); color: #B45309; }

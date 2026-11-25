@@ -80,9 +80,12 @@
       {% for project in projects %}
       <tr>
         <td>
-          <div class="cell-title">
-            <strong><a href="{% url 'predictions:project_detail' project.pk %}">{{ project.project_name|truncatechars:38 }}</a></strong>
-            <small>{{ project.project_id }} · {{ project.project_type }}</small>
+          <div class="cell-title cell-title-media">
+            <img class="project-thumb" src="{% static 'images/infrastructure/highway-project.jpg' %}" alt="{{ project.project_type }}" loading="lazy">
+            <div>
+              <strong><a href="{% url 'predictions:project_detail' project.pk %}">{{ project.project_name|truncatechars:38 }}</a></strong>
+              <small>{{ project.project_id }} · {{ project.project_type }}</small>
+            </div>
           </div>
         </td>
         <td class="nowrap">{{ project.district }}, {{ project.state }}</td>
