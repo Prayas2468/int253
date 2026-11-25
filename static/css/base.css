@@ -2568,3 +2568,7 @@ h1, h2, h3, .hero-metric strong, .stat-value, .dashboard-hero h1 {
         scroll-behavior: auto !important;
     }
 }
+
+/* Lenis smooth scroll override */
+html.lenis { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
