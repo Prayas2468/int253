@@ -127,9 +127,6 @@
             if (!values.length) return;
 
             var height = wrap.clientHeight || 56;
-            var gradient = canvas.getContext('2d').createLinearGradient(0, 0, 0, height);
-            gradient.addColorStop(0, colors.primary + '59');
-            gradient.addColorStop(1, colors.primary + '05');
             addChart(new Chart(canvas, {
                 type: 'line',
                 data: {
@@ -137,7 +134,7 @@
                     datasets: [{
                         data: values,
                         borderColor: colors.primary,
-                        backgroundColor: gradient,
+                        backgroundColor: colors.primary + '1F',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,

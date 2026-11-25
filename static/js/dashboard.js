@@ -101,10 +101,6 @@
             }).filter(function (value) { return Number.isFinite(value); });
             if (!values.length) return;
 
-            var height = wrap.clientHeight || 56;
-            var gradient = canvas.getContext('2d').createLinearGradient(0, 0, 0, height);
-            gradient.addColorStop(0, colors.primary + '59'); // ~35% alpha
-            gradient.addColorStop(1, colors.primary + '05');
             addChart(new Chart(canvas, {
                 type: 'line',
                 data: {
@@ -112,7 +108,7 @@
                     datasets: [{
                         data: values,
                         borderColor: colors.primary,
-                        backgroundColor: gradient,
+                        backgroundColor: colors.primary + '1F',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -384,10 +380,6 @@
             if (uploadsData && uploadsData.labels && uploadsData.labels.length) {
                 var options = baseOptions(colors);
                 options.plugins.legend = { display: false };
-                var ctx = uploads.getContext('2d');
-                var gradient = ctx.createLinearGradient(0, 0, 0, 260);
-                gradient.addColorStop(0, colors.primary + '47'); // ~28% alpha
-                gradient.addColorStop(1, colors.primary + '03');
                 addChart(new Chart(uploads, {
                     type: 'line',
                     data: {
@@ -396,7 +388,7 @@
                             label: 'Uploads',
                             data: uploadsData.values,
                             borderColor: colors.primary,
-                            backgroundColor: gradient,
+                            backgroundColor: colors.primary + '1F',
                             borderWidth: 2.5,
                             fill: true,
                             tension: 0.4,
