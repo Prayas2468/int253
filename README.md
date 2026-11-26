@@ -18,6 +18,10 @@ An intelligent **Django + Machine Learning** platform that predicts land-acquisi
 ![Theme](https://img.shields.io/badge/Theme-Orange%20%7C%20Peach%20%7C%20Maroon-D97736?style=flat-square)
 ![Mode](https://img.shields.io/badge/Mode-Light%20%26%20Dark-4A2522?style=flat-square)
 
+<br>
+
+🌐 **Live Demo:** [`https://bhoomiai-smart-land-record-system.onrender.com`](https://bhoomiai-smart-land-record-system.onrender.com)
+
 </div>
 
 ---
@@ -296,8 +300,8 @@ The project is pre-configured for **Render** using PostgreSQL while keeping SQLi
 |---|---|
 | `SECRET_KEY` | long random string |
 | `DEBUG` | `False` |
-| `ALLOWED_HOSTS` | your Render hostname |
-| `CSRF_TRUSTED_ORIGINS` | `https://bhoomiai-smart-land-record-system.onrender.com/` |
+| `ALLOWED_HOSTS` | `bhoomiai-smart-land-record-system.onrender.com` |
+| `CSRF_TRUSTED_ORIGINS` | `https://bhoomiai-smart-land-record-system.onrender.com` |
 | `DATABASE_URL` | provided by the linked PostgreSQL database |
 
 ### Automatic data setup on deploy (no Shell required)

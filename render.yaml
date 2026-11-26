@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: bhoomiai-predictive-analytics
+    name: bhoomiai-smart-land-record-system
     env: python
     buildCommand: ./build.sh
     startCommand: gunicorn bhoomiai_project.wsgi:application
@@ -12,9 +12,9 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: ALLOWED_HOSTS
-        value: bhoomiai-predictive-analytics.onrender.com
+        value: bhoomiai-smart-land-record-system.onrender.com
       - key: CSRF_TRUSTED_ORIGINS
-        value: https://bhoomiai-predictive-analytics.onrender.com
+        value: https://bhoomiai-smart-land-record-system.onrender.com
       - key: DATABASE_URL
         fromDatabase:
           name: bhoomiai-db
