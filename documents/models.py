@@ -24,6 +24,8 @@ class LandDocument(models.Model):
     confidence = models.FloatField(default=0.0)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     processed_at = models.DateTimeField(null=True, blank=True)
+    # Populated when OCR cannot extract text (e.g. unsupported or unreadable file).
+    processing_error = models.TextField(blank=True, default='')
 
     class Meta:
         ordering = ['-uploaded_at']

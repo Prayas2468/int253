@@ -86,6 +86,7 @@ def run_ocr(request, pk):
     doc = get_object_or_404(LandDocument, pk=pk, owner=request.user)
     engine = OCREngine()
     extracted = engine.process(doc.file.path)
+    extraction_error = engine.last_error
 
     doc.fields.all().delete()
     detected = 0
@@ -114,7 +115,12 @@ def run_ocr(request, pk):
         doc.state = infer_state(doc.district)
     doc.confidence = engine.confidence
     doc.processed_at = timezone.now()
-    doc.status = 'done' if detected else 'failed'
+    if detected:
+        doc.status = 'done'
+        doc.processing_error = ''
+    else:
+        doc.status = 'failed'
+        doc.processing_error = extraction_error or 'No readable text found in this file.'
     doc.save()
 
     validate_document(doc)
@@ -131,7 +137,8 @@ def run_ocr(request, pk):
     else:
         messages.warning(
             request,
-            'OCR ran but no fields could be read. Try a clearer scan, or enter the fields manually.',
+            f'Could not extract text from "{doc.original_name}": {doc.processing_error} '
+            'You can still enter the fields manually.',
         )
     notify(request.user, f'OCR completed for "{doc.original_name}".')
     return redirect('documents:detail', pk=doc.pk)

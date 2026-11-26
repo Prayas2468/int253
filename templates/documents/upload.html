@@ -7,7 +7,7 @@
   <div>
     <span class="eyebrow">New record</span>
     <h1>Upload a land record</h1>
-    <p>PDF, PNG, JPG or TIFF up to 10 MB. OCR runs when you open the record.</p>
+    <p>PDF, images, Word (.doc/.docx), Excel (.xls/.xlsx) or CSV up to 10 MB. OCR runs when you open the record.</p>
   </div>
   <a href="{% url 'documents:list' %}" class="btn btn-ghost btn-sm">{% include 'partials/icon.html' with name='icon-arrow-right' %}Back to documents</a>
 </div>
@@ -23,7 +23,7 @@
     <div class="dropzone" data-dropzone>
       <span class="dz-icon">{% include 'partials/icon.html' with name='icon-upload' %}</span>
       <strong>Drag &amp; drop your document here</strong>
-      <span>or click to browse — PDF, PNG, JPG, TIFF (max 10 MB)</span>
+      <span>or click to browse — PDF, image, Word, Excel, CSV (max 10 MB)</span>
       {{ form.file }}
     </div>
     {% if form.file.errors %}<div class="form-error">{{ form.file.errors|join:", " }}</div>{% endif %}

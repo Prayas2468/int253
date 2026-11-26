@@ -24,6 +24,13 @@
   </div>
 </div>
 
+{% if document.status == 'failed' and document.processing_error %}
+<div class="alert alert-error" role="alert" style="margin-bottom:16px;">
+  {% include 'partials/icon.html' with name='icon-alert' %}
+  <span>{{ document.processing_error }}</span>
+</div>
+{% endif %}
+
 <div class="detail-grid">
   <section class="card">
     <div class="chart-head"><div><h4>Document preview</h4><span>Original uploaded file</span></div></div>

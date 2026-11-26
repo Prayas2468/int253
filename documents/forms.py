@@ -3,7 +3,17 @@ import os
 from django import forms
 from .models import LandDocument
 
-ALLOWED_EXTENSIONS = {'.pdf', '.png', '.jpg', '.jpeg', '.tif', '.tiff', '.bmp', '.webp'}
+ALLOWED_EXTENSIONS = {
+    '.pdf',
+    # images
+    '.png', '.jpg', '.jpeg', '.tif', '.tiff', '.bmp', '.webp',
+    # word processing
+    '.doc', '.docx',
+    # spreadsheets
+    '.xls', '.xlsx',
+    # tabular text
+    '.csv',
+}
 MAX_UPLOAD_MB = 10
 
 
@@ -23,7 +33,8 @@ class DocumentUploadForm(forms.ModelForm):
         widgets = {
             'file': forms.ClearableFileInput(attrs={
                 'class': 'form-input file-input',
-                'accept': '.pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp',
+                'accept': ('.pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.webp,'
+                           '.doc,.docx,.xls,.xlsx,.csv'),
             }),
             'survey_number': forms.TextInput(attrs={
                 'class': 'form-input', 'placeholder': 'e.g. 142/2',
@@ -49,7 +60,8 @@ class DocumentUploadForm(forms.ModelForm):
         extension = os.path.splitext(upload.name)[1].lower()
         if extension not in ALLOWED_EXTENSIONS:
             raise forms.ValidationError(
-                'Unsupported file type. Upload a PDF or image (PNG, JPG, TIFF, BMP, WEBP).'
+                'Unsupported file type. Upload a PDF, image, Word (.doc/.docx), '
+                'Excel (.xls/.xlsx) or CSV file.'
             )
         if upload.size > MAX_UPLOAD_MB * 1024 * 1024:
             raise forms.ValidationError(f'File is too large. Maximum size is {MAX_UPLOAD_MB} MB.')

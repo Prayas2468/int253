@@ -63,7 +63,7 @@ This release focuses on a complete **UI/UX and theme overhaul** plus verified en
 | **Model Performance** | Accuracy, precision, recall, F1, confusion matrices, ROC curves and feature importance for all candidate models. |
 | **Prediction History** | Full audit trail of every stored prediction with its model version. |
 | **Reports & Exports** | CSV, PDF and Excel exports generated from live data and persisted metrics. |
-| **Documents & OCR** | Upload land documents and extract fields via the OCR engine, with validation and duplicate detection. |
+| **Documents & OCR** | Upload PDF, image, Word (`.doc/.docx`), Excel (`.xls/.xlsx`) or CSV land documents and extract fields via the OCR engine, with validation and duplicate detection. |
 | **Notifications & Settings** | Unread notification badge and theme preference. |
 | **Authentication** | Email-based login / signup with a custom user model and Django admin panel. |
 
