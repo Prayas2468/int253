@@ -297,7 +297,7 @@ The project is pre-configured for **Render** using PostgreSQL while keeping SQLi
 | `SECRET_KEY` | long random string |
 | `DEBUG` | `False` |
 | `ALLOWED_HOSTS` | your Render hostname |
-| `CSRF_TRUSTED_ORIGINS` | `https://<your-app>.onrender.com` |
+| `CSRF_TRUSTED_ORIGINS` | `https://bhoomiai-smart-land-record-system.onrender.com/` |
 | `DATABASE_URL` | provided by the linked PostgreSQL database |
 
 ### Post-deploy setup (Render Shell)
