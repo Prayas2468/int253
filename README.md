@@ -284,10 +284,10 @@ The suite covers synthetic dataset size and relationships, model metrics and art
 
 The project is pre-configured for **Render** using PostgreSQL while keeping SQLite locally.
 
-1. Push the branch to GitHub.
-2. In Render, create a **Web Service** from the repository — `render.yaml` provisions it automatically.
+1. Push `main` to GitHub.
+2. In Render, create a **Blueprint** or **Web Service** from the repository — `render.yaml` provisions it automatically.
 3. Create a **PostgreSQL** database (free tier) and link it (sets `DATABASE_URL`).
-4. Build command: `./build.sh` (installs deps → `collectstatic` → `migrate`).
+4. Build command: `./build.sh` — installs deps → `collectstatic` → `migrate` → `bootstrap_accounts`.
 5. Start command: `gunicorn bhoomiai_project.wsgi:application`.
 
 **Required environment variables**
@@ -299,6 +299,23 @@ The project is pre-configured for **Render** using PostgreSQL while keeping SQLi
 | `ALLOWED_HOSTS` | your Render hostname |
 | `CSRF_TRUSTED_ORIGINS` | `https://<your-app>.onrender.com` |
 | `DATABASE_URL` | provided by the linked PostgreSQL database |
+
+### Post-deploy setup (Render Shell)
+
+The build automatically creates the default **admin** and **demo** accounts
+(`bootstrap_accounts`). To load the **2,400-row synthetic demo workspace** into the
+live PostgreSQL database, open **Render Dashboard → your service → Shell** and run:
+
+```bash
+python manage.py generate_synthetic_data --seed-db
+```
+
+This is **idempotent** — re-running it adds only missing projects, so it is safe to run
+more than once. To (re)confirm the default accounts at any time:
+
+```bash
+python manage.py bootstrap_accounts
+```
 
 > ML artifacts (`ml_artifacts/`) and the synthetic dataset (`data/`) are committed and loaded at runtime. Render's filesystem is ephemeral, so reports are generated on demand. **Never copy the local SQLite database to production** — run migrations on the empty PostgreSQL database.
 
